@@ -13,9 +13,20 @@ interface EditorFormState {
 }
 
 
-const colorMap = {
-  goodCutoff: 75,
-  neutralCutoff: 50,
+const timerColorMap = {
+  upperCutoff: 30,
+  centerCutoff: 15,
+  isInverted : true,
+};
+const speedColorMap = {
+  upperCutoff: 75,
+  centerCutoff: 50,
+  isInverted : false,
+};
+const completionColorMap = {
+  upperCutoff: 75,
+  centerCutoff: 50,
+  isInverted: false,
 };
 
 export class Editor extends Component<{}, EditorFormState> {
@@ -80,10 +91,9 @@ export class Editor extends Component<{}, EditorFormState> {
             viewable={`${this.state.minutes.toString().padStart(2, '0')}:${this.state.seconds.toString().padStart(2, '0')}`}
             value={this.state.elapsedSeconds}
             title="Time"
-            unit=""
-            colorMap={colorMap} />
-          <ValueDisplay viewable="50" value={76} title="Speed" unit="%" colorMap={colorMap} />
-          <ValueDisplay viewable="50" value={49} title="Completion" unit="%" colorMap={colorMap} />
+            colorMap={timerColorMap} />
+          <ValueDisplay value={76} title="Speed" unit="%" colorMap={speedColorMap} />
+          <ValueDisplay value={49} title="Completion" unit="%" colorMap={completionColorMap} />
         </div>
         <div className="form-container">
           <div className="form-editor"><EditorForm content={this.temp2}/></div>

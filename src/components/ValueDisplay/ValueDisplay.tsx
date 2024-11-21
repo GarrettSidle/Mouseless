@@ -3,26 +3,27 @@ import { Component, ReactNode } from "react";
 import "./ValueDisplay.css";
 
 function getStateColor(valueState: number, colorMap: ColorMap) {
-    if (valueState >= colorMap.goodCutoff) {
-        return "good"
+    if (valueState >= colorMap.upperCutoff) {
+        return colorMap.isInverted ? "bad" : "good"
     }
-    if (valueState >= colorMap.neutralCutoff
+    if (valueState >= colorMap.centerCutoff
     ) {
         return "neutral"
     }
-    return "bad"
+    return colorMap.isInverted ? "good" : "bad"
 }
 
 interface ColorMap {
-    goodCutoff: number;
-    neutralCutoff: number;
+    upperCutoff: number;
+    centerCutoff: number;
+    isInverted: boolean;
 }
 
 
 interface ValueProps {
     value: number;
-    viewable : string;
-    unit: string;
+    viewable?: string;
+    unit?: string;
     title: string;
     colorMap: ColorMap;
 }
@@ -39,10 +40,12 @@ export class ValueDisplay extends Component<ValueProps> {
                 <h1>{this.props.title}</h1>
                 <div className="reading">
                     <div className={`value-circle ${getStateColor(this.props.value, this.props.colorMap)}-background`}>
-                        <span className="value">{this.props.viewable}</span>
+                        <span className="value">
+                            {this.props.viewable == null ? this.props.value : this.props.viewable}
+                        </span>
                     </div>
-                    <div className={`unit-box ${this.props.unit ==""?"hidden":""}`}>
-                        <span className="unit">{this.props.unit}</span> 
+                    <div className={`unit-box ${this.props.unit == null ? "hidden" : ""}`}>
+                        <span className="unit">{this.props.unit}</span>
                     </div>
                 </div>
             </div>
