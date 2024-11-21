@@ -21,7 +21,7 @@ export class Navigation extends Component<{}, { navUnfolded: boolean }> {
 
   public render() {
     return (
-      <div className="Navigation">
+      <div className="navigation">
       </div>
     );
   }

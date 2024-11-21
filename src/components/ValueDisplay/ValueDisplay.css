@@ -1,0 +1,55 @@
+.value-display{
+    padding: 1%;
+    margin: auto;
+
+}
+
+.value-display h1{
+    color: white;
+    margin: 0%;
+    padding: .5%;
+    font-size: 15px;
+    float: left;
+}
+
+.reading {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+
+  }
+  
+  .value-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .unit-box {
+    position: absolute;
+    bottom: 10px; 
+    right: -30px; 
+    background-color: #333; 
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: normal;
+    width: 50px;
+    z-index: 1;
+  }
+  
+  .unit {
+    float: right;
+    padding-right: 2px;
+  }
+
+  

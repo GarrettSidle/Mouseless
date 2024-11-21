@@ -1,3 +1,36 @@
-.Editor{
+.editor{
     height: 1000px;
+}
+
+.editor h1{
+padding: 2%;
+}
+
+.form-container{
+    border:  1px blue solid;
+    width: 98%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.form-container div{
+    border:  1px blue solid;
+    margin: auto;
+    width: 45%;
+    height: 1000px;
+}
+
+.form-editor{
+
+}
+.form-diff{
+
+}
+
+.value-displays{
+    display: flex;
+    flex-wrap: wrap;
+    width: 60%;
+    margin: auto;
 }

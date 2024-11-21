@@ -1,6 +1,8 @@
 .App {
+  margin-top: 78px;
   text-align: center;
   background-color: #282c34;
+  color: #61dafb;
 }
 
 body{
@@ -41,4 +43,21 @@ body{
   to {
     transform: rotate(360deg);
   }
+}
+
+
+  
+.good-background{
+  background-color:#4CAF50 ;
+}
+
+.neutral-background{
+  background-color: #505050 ;
+}
+
+.bad-background{
+  background-color:#d15955 ;
+}
+.hidden{
+  visibility: hidden;
 }
