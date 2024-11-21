@@ -4,13 +4,17 @@ interface EditorFormState {
   content: string;
 }
 
-class EditorForm extends Component<{}, EditorFormState> {
-  constructor(props: {}) {
+interface EditorFormProps{
+  content:string
+}
+class EditorForm extends Component<EditorFormProps, EditorFormState> {
+  constructor(props: EditorFormProps) {
     super(props);
     this.state = {
-      content: "Type here...",
+      content: this.props.content,
     };
   }
+
 
   handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const { content } = this.state;

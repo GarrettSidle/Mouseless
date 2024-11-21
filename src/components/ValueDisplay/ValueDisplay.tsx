@@ -21,6 +21,7 @@ interface ColorMap {
 
 interface ValueProps {
     value: number;
+    viewable : string;
     unit: string;
     title: string;
     colorMap: ColorMap;
@@ -38,10 +39,10 @@ export class ValueDisplay extends Component<ValueProps> {
                 <h1>{this.props.title}</h1>
                 <div className="reading">
                     <div className={`value-circle ${getStateColor(this.props.value, this.props.colorMap)}-background`}>
-                        <span className="value">{this.props.value}</span>
+                        <span className="value">{this.props.viewable}</span>
                     </div>
                     <div className={`unit-box ${this.props.unit ==""?"hidden":""}`}>
-                        <span className="unit">{this.props.unit}</span>
+                        <span className="unit">{this.props.unit}</span> 
                     </div>
                 </div>
             </div>

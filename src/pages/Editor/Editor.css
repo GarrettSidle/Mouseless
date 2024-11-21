@@ -14,18 +14,16 @@ padding: 2%;
     flex-wrap: wrap;
 }
 
-.form-container div{
-    border:  1px blue solid;
-    margin: auto;
-    width: 45%;
-    height: 1000px;
-}
 
 .form-editor{
-
+    border:  1px red solid;
+    margin: auto;
+    width: 40%;
 }
 .form-diff{
-
+    border:  1px red solid;
+    margin: auto;
+    width: 40%;
 }
 
 .value-displays{
@@ -33,4 +31,18 @@ padding: 2%;
     flex-wrap: wrap;
     width: 60%;
     margin: auto;
+}
+
+.editor-buttons{
+    margin: 1%;
+}
+
+
+.editor-buttons button{
+    margin: .5%;
+    font-size: 20px;
+    padding: 1%;
+    border-radius: 15px;
+    background-color: #4CAF50;
+    color: white;
 }

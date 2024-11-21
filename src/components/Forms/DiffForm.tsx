@@ -5,11 +5,14 @@ interface DiffFormState {
   content: string;
 }
 
-class DiffForm extends Component<{}, DiffFormState> {
-  constructor(props: {}) {
+interface DiffFormProps{
+  content:string
+}
+class DiffForm extends Component<DiffFormProps, DiffFormState> {
+  constructor(props: DiffFormProps) {
     super(props);
     this.state = {
-      content: "Diff here...",
+      content: this.props.content,
     };
   }
 
@@ -21,10 +24,10 @@ class DiffForm extends Component<{}, DiffFormState> {
 
     return (
       <div>
-        <h1>Simple Text Editor</h1>
+        <h1>Diff Text Editor</h1>
         <textarea
-          id="editor"
-          className="form"
+          id="diff"
+          className="form diff"
           value={content}
           readOnly
         />
