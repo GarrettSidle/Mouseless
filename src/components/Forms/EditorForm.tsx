@@ -21,7 +21,7 @@ class EditorForm extends Component<{}, EditorFormState> {
           event.preventDefault();
           this.applyFormatting("**");
           break;
-        case "i": // Italic
+        case "i": // Italics
           event.preventDefault();
           this.applyFormatting("_");
           break;
@@ -66,12 +66,6 @@ class EditorForm extends Component<{}, EditorFormState> {
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
         />
-        <p>
-          <strong>Shortcuts:</strong> <br />
-          <code>Ctrl + B</code>: Bold <br />
-          <code>Ctrl + I</code>: Italic <br />
-          <code>Ctrl + U</code>: Underline
-        </p>
       </div>
     );
   }
