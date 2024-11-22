@@ -13,9 +13,9 @@ import Problem from "../../models/Problem";
 
 const problems: Problem[] = [
   {
-    originalText: "interface TimerState {\ntime: number;\nisRunning: boolean;\n}",
-    modifiedText: "interface TimerState {\ntime: number;\n}",
-    currentText : "interface TimerState {\ntime: number;\nisRunning: boolean;\n}"
+    originalText: "interface TimerState {\n   time: number;\n   isRunning: boolean;\n}",
+    modifiedText: "interface TimerState {\n   time: number;\n}",
+    currentText : "interface TimerState {\n   time: number;\n   isRunning: boolean;\n}"
   },
   {
     originalText: "1",
@@ -123,11 +123,26 @@ export class Editor extends Component<{}, EditorFormState> {
     }
   }
 
+  handleCurrentTextChange = (newText: string) => {
+    this.setState((prevState) => ({
+      problem: {
+        ...prevState.problem,
+        currentText: newText, 
+      },
+    }));
+  };
+
+  updateCurrentText = (newText: string) => {
+    this.setState((prevState) => ({
+      problem: { ...prevState.problem, currentText: newText }
+    }));
+  };
+
 
   public render() {
     return (
       <div className="editor">
-        <h1>{this.state.problem.originalText}</h1>
+        <h1>Mouseless</h1>
         <div className="value-displays">
           <ValueDisplay
             viewable={`${this.state.minutes.toString().padStart(2, '0')}:${this.state.seconds.toString().padStart(2, '0')}`}
@@ -138,8 +153,8 @@ export class Editor extends Component<{}, EditorFormState> {
           <ValueDisplay value={49} title="Completion" unit="%" colorMap={completionColorMap} />
         </div>
         <div className="form-container">
-          <div className="form-editor"><EditorForm problem={this.state.problem} /></div>
-          <div className="form-diff"><DiffForm problem={this.state.problem} /></div>
+          <div className="form-editor"><EditorForm onCurrentTextChange = {this.updateCurrentText} problem={this.state.problem} /></div>
+          <div className="form-diff"><DiffForm onCurrentTextChange={this.handleCurrentTextChange} problem={this.state.problem} /></div>
         </div>
         <div className="editor-buttons">
           <button onClick={() => { }}>Reset</button>

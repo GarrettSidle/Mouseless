@@ -3,10 +3,12 @@ import Problem from "../../models/Problem";
 
 interface EditorFormState {
   problem: Problem
+  
 }
 
 interface EditorFormProps {
   problem: Problem
+  onCurrentTextChange :(newMessage: string) => void; 
 }
 class EditorForm extends Component<EditorFormProps, EditorFormState> {
   constructor(props: EditorFormProps) {
@@ -57,6 +59,7 @@ class EditorForm extends Component<EditorFormProps, EditorFormState> {
     this.setState((prevState) => ({
       problem: { ...prevState.problem, currentText: event.target.value }
     }));
+    this.props.onCurrentTextChange(event.target.value);
   };
 
   render() {

@@ -1,12 +1,11 @@
 .form {
     width: 100%;
     height: 80vh;
-    font-size: 16px;
+    font-size: 20px;
     padding: 10px;
     background-color: lightgray;
     border-radius: 25px;
     resize: none;
-
 }
 
 .diff {
@@ -18,4 +17,9 @@
     /* Firefox */
     -ms-user-select: none;
     /* Internet Explorer/Edge */
+
+    white-space: pre-wrap;
+    font-family: monospace;
+    color: black;
+    text-align: left;
 }
