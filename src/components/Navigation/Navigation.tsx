@@ -3,8 +3,25 @@ import { Component } from "react";
 import "./Navigation.css";
 
 
-const NavLinks = [0]
-export class Navigation extends Component<{}, { navUnfolded: boolean }> {
+const navLinks = [
+  {
+    title: "Home",
+    link: "/Home",
+    target: ""
+  },
+  {
+    title: "Problems",
+    link: "/Editor",
+    target: ""
+  },
+  {
+    title: "Shortcuts",
+    link: "/Shortcuts",
+    target: ""
+  },
+
+]
+export class navigation extends Component<{}, { navUnfolded: boolean }> {
   constructor(props: {}) {
     super(props);
     this.state = {
@@ -12,7 +29,7 @@ export class Navigation extends Component<{}, { navUnfolded: boolean }> {
     };
   }
 
-  toggleNav = () => {
+  togglenav = () => {
     this.setState((prevState) => ({
       navUnfolded: !prevState.navUnfolded,
     }));
@@ -21,11 +38,22 @@ export class Navigation extends Component<{}, { navUnfolded: boolean }> {
 
   public render() {
     return (
-      <div className="navigation">
+      <div className={this.state.navUnfolded ? "enabled" : ""}>
+        <nav className="navigation">
+          <div className="nav-objects">
+            <a href="/Home" className="nav-brand">Mouseless.us</a>
+            <button className="hamburger" onClick={() => { this.togglenav() }}>☰</button>
+            <div className="nav-links">
+              {navLinks.map((navLink) => (
+                <a key={navLink.title} target={navLink.target} href={navLink.link}>{navLink.title.toLocaleUpperCase()}</a>
+              ))}
+            </div>
+          </div>
+        </nav>
       </div>
     );
   }
 
 
 }
-export default Navigation;
+export default navigation;
