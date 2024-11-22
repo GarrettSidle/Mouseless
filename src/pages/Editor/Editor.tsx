@@ -148,7 +148,7 @@ export class Editor extends Component<{}, EditorFormState> {
             value={this.state.elapsedSeconds}
             title="Time"
             colorMap={timerColorMap} />
-          <ValueDisplay value={76} title="Speed" unit="%" colorMap={speedColorMap} />
+          <ValueDisplay value={76} title="Speed" unit="WPM" colorMap={speedColorMap} />
           <ValueDisplay value={49} title="Completion" unit="%" colorMap={completionColorMap} />
         </div>
         <div className="form-container">

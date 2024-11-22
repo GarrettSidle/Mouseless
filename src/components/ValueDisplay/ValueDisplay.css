@@ -48,9 +48,12 @@
     border: #2095f4 solid 1px;
   }
   
+  .Speed-unit-box{
+    right: -50px; 
+  }
   .unit {
     float: right;
-    padding-right: 2px;
+
   }
 
   

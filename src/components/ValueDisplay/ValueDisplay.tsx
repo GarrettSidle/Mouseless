@@ -40,7 +40,7 @@ export class ValueDisplay extends Component<ValueProps> {
                             {this.props.viewable == null ? this.props.value : this.props.viewable}
                         </span>
                     </div>
-                    <div className={`unit-box ${this.props.unit == null ? "hidden" : ""}`}>
+                    <div className={`unit-box ${this.props.unit == null ? "hidden" : ""} ${this.props.title}-unit-box`}>
                         <span className="unit">{this.props.unit}</span>
                     </div>
                 </div>
