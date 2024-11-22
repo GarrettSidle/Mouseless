@@ -1,23 +1,23 @@
 import React, { Component } from "react";
+import Problem from "../../models/Problem";
 
 interface EditorFormState {
-  content: string;
+  problem: Problem
 }
 
-interface EditorFormProps{
-  content:string
+interface EditorFormProps {
+  problem: Problem
 }
 class EditorForm extends Component<EditorFormProps, EditorFormState> {
   constructor(props: EditorFormProps) {
     super(props);
     this.state = {
-      content: this.props.content,
+      problem: this.props.problem
     };
   }
 
 
   handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    const { content } = this.state;
 
     if (event.ctrlKey || event.metaKey) {
       switch (event.key) {
@@ -42,23 +42,25 @@ class EditorForm extends Component<EditorFormProps, EditorFormState> {
   applyFormatting = (prefix: string, suffix: string = "") => {
     const textarea = document.getElementById("editor") as HTMLTextAreaElement;
     const { selectionStart, selectionEnd } = textarea;
-    const { content } = this.state;
+    const content = this.state.problem.currentText;
 
     const before = content.slice(0, selectionStart);
     const selected = content.slice(selectionStart, selectionEnd);
     const after = content.slice(selectionEnd);
 
-    this.setState({
-      content: before + prefix + selected + suffix + after,
-    });
-  };
+    this.setState((prevState) => ({
+      problem: { ...prevState.problem, currentText: before + prefix + selected + suffix + after }
+    }));
+  }
 
   handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    this.setState({ content: event.target.value });
+    this.setState((prevState) => ({
+      problem: { ...prevState.problem, currentText: event.target.value }
+    }));
   };
 
   render() {
-    const { content } = this.state;
+    const content = this.state.problem.currentText;
 
     return (
       <div>

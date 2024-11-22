@@ -1,6 +1,7 @@
 import { Component, ReactNode } from "react";
 
 import "./ValueDisplay.css";
+import ColorMap from "../../models/ColorMap";
 
 function getStateColor(valueState: number, colorMap: ColorMap) {
     if (valueState >= colorMap.upperCutoff) {
@@ -13,11 +14,6 @@ function getStateColor(valueState: number, colorMap: ColorMap) {
     return colorMap.isInverted ? "good" : "bad"
 }
 
-interface ColorMap {
-    upperCutoff: number;
-    centerCutoff: number;
-    isInverted: boolean;
-}
 
 
 interface ValueProps {

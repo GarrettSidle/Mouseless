@@ -1,26 +1,18 @@
 import React, { Component } from "react";
 import "./Forms.css"
+import Problem from "../../models/Problem";
 
-interface DiffFormState {
-  content: string;
-}
 
 interface DiffFormProps{
-  content:string
+  problem:Problem
 }
-class DiffForm extends Component<DiffFormProps, DiffFormState> {
-  constructor(props: DiffFormProps) {
-    super(props);
-    this.state = {
-      content: this.props.content,
-    };
-  }
+class DiffForm extends Component<DiffFormProps> {
+
 
 
 
 
   render() {
-    const { content } = this.state;
 
     return (
       <div>
@@ -28,7 +20,7 @@ class DiffForm extends Component<DiffFormProps, DiffFormState> {
         <textarea
           id="diff"
           className="form diff"
-          value={content}
+          value={this.props.problem.modifiedText}
           readOnly
         />
       </div>

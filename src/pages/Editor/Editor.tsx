@@ -4,26 +4,58 @@ import "./Editor.css";
 import ValueDisplay from "../../components/ValueDisplay/ValueDisplay";
 import EditorForm from "../../components/Forms/EditorForm";
 import DiffForm from "../../components/Forms/DiffForm";
+import ColorMap from "../../models/ColorMap";
+import Problem from "../../models/Problem";
+
+
+
+
+
+const problems: Problem[] = [
+  {
+    originalText: "interface TimerState {\ntime: number;\nisRunning: boolean;\n}",
+    modifiedText: "interface TimerState {\ntime: number;\n}",
+    currentText : "interface TimerState {\ntime: number;\nisRunning: boolean;\n}"
+  },
+  {
+    originalText: "1",
+    modifiedText: "1",
+    currentText : ""
+  },
+  {
+    originalText: "2",
+    modifiedText: "2",
+    currentText : ""
+  },
+  {
+    originalText: "3",
+    modifiedText: "3",
+    currentText : ""
+  },
+]
+
+
 
 interface EditorFormState {
   isRunning: boolean;
   minutes: number;
   seconds: number;
   elapsedSeconds: number;
+  problem: Problem;
 }
 
 
-const timerColorMap = {
+const timerColorMap: ColorMap = {
   upperCutoff: 30,
   centerCutoff: 15,
-  isInverted : true,
+  isInverted: true,
 };
-const speedColorMap = {
+const speedColorMap: ColorMap = {
   upperCutoff: 75,
   centerCutoff: 50,
-  isInverted : false,
+  isInverted: false,
 };
-const completionColorMap = {
+const completionColorMap: ColorMap = {
   upperCutoff: 75,
   centerCutoff: 50,
   isInverted: false,
@@ -36,20 +68,32 @@ export class Editor extends Component<{}, EditorFormState> {
       minutes: 0,
       seconds: 0,
       isRunning: false,   // Tracks if the timer is running
-      elapsedSeconds: 0
+      elapsedSeconds: 0,
+      problem: problems[0]
     };
     this.startTimer()
   }
 
   private timer: NodeJS.Timeout | null = null;  // Timer interval reference
 
+  skipProblem() {
+    var index = Math.floor(Math.random() * (problems.length))
+    this.setState({ problem: problems[index] })
+  }
+
   // Start the timer
   startTimer = () => {
     if (!this.state.isRunning) {
       this.timer = setInterval(() => {
-        this.setState((prevState) => ({ seconds: prevState.seconds + 1, elapsedSeconds: prevState.elapsedSeconds + 1 }));
+        this.setState((prevState) => ({
+          seconds: prevState.seconds + 1,
+          elapsedSeconds: prevState.elapsedSeconds + 1
+        }));
         if (this.state.seconds >= 60) {
-          this.setState((prevState) => ({ minutes: prevState.minutes + 1, seconds: 0 }));
+          this.setState((prevState) => ({
+            minutes: prevState.minutes + 1,
+            seconds: 0
+          }));
         }
       }, 1000);
       this.setState({ isRunning: true });
@@ -79,13 +123,11 @@ export class Editor extends Component<{}, EditorFormState> {
     }
   }
 
-  private temp1:string = "interface TimerState {\ntime: number;\nisRunning: boolean;\n}"
-  private temp2:string = "interface TimerState {\ntime: number;\n}"
 
   public render() {
     return (
       <div className="editor">
-        <h1>This is a test</h1>
+        <h1>{this.state.problem.originalText}</h1>
         <div className="value-displays">
           <ValueDisplay
             viewable={`${this.state.minutes.toString().padStart(2, '0')}:${this.state.seconds.toString().padStart(2, '0')}`}
@@ -96,12 +138,12 @@ export class Editor extends Component<{}, EditorFormState> {
           <ValueDisplay value={49} title="Completion" unit="%" colorMap={completionColorMap} />
         </div>
         <div className="form-container">
-          <div className="form-editor"><EditorForm content={this.temp2}/></div>
-          <div className="form-diff"><DiffForm content={this.temp1}/></div>
+          <div className="form-editor"><EditorForm problem={this.state.problem} /></div>
+          <div className="form-diff"><DiffForm problem={this.state.problem} /></div>
         </div>
         <div className="editor-buttons">
-          <button>Reset</button>
-          <button>Skip</button>
+          <button onClick={() => { }}>Reset</button>
+          <button onClick={() => { this.skipProblem() }}>Skip</button>
         </div>
       </div>
     );
