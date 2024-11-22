@@ -45,6 +45,7 @@
     font-weight: normal;
     width: 50px;
     z-index: 1;
+    border: #2095f4 solid 1px;
   }
   
   .unit {

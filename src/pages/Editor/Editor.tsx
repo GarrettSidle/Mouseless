@@ -142,7 +142,6 @@ export class Editor extends Component<{}, EditorFormState> {
   public render() {
     return (
       <div className="editor">
-        <h1>Mouseless</h1>
         <div className="value-displays">
           <ValueDisplay
             viewable={`${this.state.minutes.toString().padStart(2, '0')}:${this.state.seconds.toString().padStart(2, '0')}`}

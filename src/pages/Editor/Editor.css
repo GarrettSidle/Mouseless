@@ -2,10 +2,6 @@
     height: 100%;
 }
 
-.editor h1{
-padding: 2%;
-}
-
 .form-container{
     width: 98%;
     margin: auto;
@@ -40,6 +36,7 @@ padding: 2%;
     font-size: 20px;
     padding: 1%;
     border-radius: 15px;
-    background-color: #4CAF50;
-    color: white;
+    background-color: #2095f4;
+    color: #edf8ff;
+    cursor:pointer
 }

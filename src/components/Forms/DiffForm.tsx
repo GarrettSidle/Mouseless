@@ -22,7 +22,7 @@ renderDiff = () => {
     // Determine the style based on the change type
     const style = {
       backgroundColor: part.added ? "lightgreen" : part.removed ? "salmon" : "transparent",
-      textDecoration: part.removed ? "line-through" : "none",
+      color: part.removed?"black": part.added? "Black": "#edf8ff"
     };
 
     return (
