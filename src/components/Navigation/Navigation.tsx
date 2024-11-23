@@ -49,8 +49,8 @@ export class navigation extends Component<{}, { navUnfolded: boolean }> {
               ))}
             </div>
             <div className="nav-account">
-              <a href="/Login">LOGIN</a>
-              <a href="/Login">SIGN UP</a>
+              <a href="/Login?page=signIn">LOGIN</a>
+              <a href="/Login?page=signUp">SIGN UP</a>
               <div>HELLO GARRETT</div>
             </div>
           </div>

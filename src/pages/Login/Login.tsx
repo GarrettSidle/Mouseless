@@ -10,8 +10,11 @@ interface LoginFormState {
 export class Login extends Component<{}, LoginFormState> {
   constructor(props: {}) {
     super(props);
+    const urlParams = new URLSearchParams(window.location.search);
+    const isSignUp = urlParams.get("page") === "signUp"; 
+
     this.state = {
-      isSignUp: false, 
+      isSignUp: isSignUp, 
       email: '',
       password: '',
     };
