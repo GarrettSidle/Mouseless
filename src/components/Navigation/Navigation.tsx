@@ -48,6 +48,11 @@ export class navigation extends Component<{}, { navUnfolded: boolean }> {
                 <a key={navLink.title} target={navLink.target} href={navLink.link}>{navLink.title.toLocaleUpperCase()}</a>
               ))}
             </div>
+            <div className="nav-account">
+              <a href="/Login">LOGIN</a>
+              <a href="/Login">SIGN UP</a>
+              <div>HELLO GARRETT</div>
+            </div>
           </div>
         </nav>
       </div>

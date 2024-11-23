@@ -2,7 +2,6 @@
     background-color: #2095f4;
     font-family: "Raleway", sans-serif;
     height: 78px;
-    flex: 1;
     position: fixed;
     top: 0;
     right: 0;
@@ -10,22 +9,43 @@
     z-index: 1030;
   }
 
-  
-  
-  .nav-links {
+  .nav-account{
     display: flex;
     float: right;
-    padding-right: 30%;
     font-size: 18px;
+    gap: .5vw; 
     padding-top: 5px;
   }
-  
-  .nav-links a {
-    flex: 1;
+
+  .nav-account a{
     padding: 2%;
     text-decoration: none;
     color: white;
+    text-wrap: nowrap;
   }
+
+  .nav-account div{
+    padding: 2%;
+    text-decoration: none;
+    color: white;
+    text-wrap: nowrap;
+  }
+  
+  .nav-links {
+    display: flex;
+    font-size: 18px;
+    gap: 1vw; 
+    padding-left: 10%;
+    width: 50%;
+    padding-top: 12px;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: white;
+  }
+
+
   
   .nav-link:hover {
     color: gray;
@@ -33,12 +53,11 @@
   }
   
   .nav-brand {
-    padding-left: 15vw;
     font-size: 3.5vh;
     font-weight: bold;
     color: #ffffff;
     text-decoration: none;
-    padding: 3rem 0 0 15vw;
+    float: left;
   }
   
   .nav-brand:hover {
@@ -48,6 +67,9 @@
   
   .nav-objects {
     padding-top: 20px;
+    display: flex;
+    width: 70%;
+    margin: auto;
   }
   
   .hamburger {

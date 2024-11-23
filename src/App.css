@@ -5,6 +5,10 @@
   color: #eff4f4;
 }
 
+.page{
+  height: 100%;
+}
+
 body{
   margin:0px
 }
