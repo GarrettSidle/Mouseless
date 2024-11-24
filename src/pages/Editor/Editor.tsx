@@ -41,6 +41,8 @@ interface EditorFormState {
   seconds: number;
   elapsedSeconds: number;
   problem: Problem;
+  wordsPerMin: number;
+  completionPerc: number;
 }
 
 
@@ -68,7 +70,9 @@ export class Editor extends Component<{}, EditorFormState> {
       seconds: 0,
       isRunning: false,   // Tracks if the timer is running
       elapsedSeconds: 0,
-      problem: problems[0]
+      problem: problems[0],
+      wordsPerMin: 0,
+      completionPerc: 0,
     };
     this.startTimer()
   }
@@ -86,6 +90,9 @@ export class Editor extends Component<{}, EditorFormState> {
         ...prevState.problem,
         currentText: this.state.problem.originalText,
       },
+      elapsedSeconds: 0,
+      seconds: 0,
+      minutes: 0
     }))
   }
 
@@ -95,7 +102,7 @@ export class Editor extends Component<{}, EditorFormState> {
       this.timer = setInterval(() => {
         this.setState((prevState) => ({
           seconds: prevState.seconds + 1,
-          elapsedSeconds: prevState.elapsedSeconds + 1
+          elapsedSeconds: prevState.elapsedSeconds + 1,
         }));
         if (this.state.seconds >= 60) {
           this.setState((prevState) => ({
@@ -103,18 +110,60 @@ export class Editor extends Component<{}, EditorFormState> {
             seconds: 0
           }));
         }
+
+        this.calculateSpeed();
+        this.calculateCompletion()
+
       }, 1000);
       this.setState({ isRunning: true });
     }
   };
 
-  // Pause the timer
-  pauseTimer = () => {
-    if (this.timer) {
-      clearInterval(this.timer);
-      this.setState({ isRunning: false });
+  calculateSpeed() {
+    let changedCharCount = 0;
+    const diffResult = Diff.diffChars(this.state.problem.currentText, this.state.problem.originalText);
+
+    // Loop through the diffResult array
+    for (let i = 0; i < diffResult.length; i++) {
+      // Check if the element is added or removed
+      if (diffResult[i].added || diffResult[i].removed) {
+        changedCharCount += diffResult[i]?.count ?? 0;
+      }
     }
-  };
+
+    var wordsPerMin = Math.round(changedCharCount / (this.state.elapsedSeconds / 60))
+    if (Number.isNaN(wordsPerMin)) {
+      wordsPerMin = 0
+    }
+
+    this.setState({ wordsPerMin: wordsPerMin })
+  }
+  calculateCompletion() {
+    let charChangesRamaining = 0;
+    let totalChanges = 0;
+    var diffResult = Diff.diffChars(this.state.problem.currentText, this.state.problem.modifiedText);
+    // Loop through the diffResult array
+    for (let i = 0; i < diffResult.length; i++) {
+      // Check if the element is added or removed
+      if (diffResult[i].added || diffResult[i].removed) {
+        charChangesRamaining += diffResult[i]?.count ?? 0;
+      }
+    }
+
+    var diffResult = Diff.diffChars(this.state.problem.originalText, this.state.problem.modifiedText);
+    // Loop through the diffResult array
+    for (let i = 0; i < diffResult.length; i++) {
+      // Check if the element is added or removed
+      if (diffResult[i].added || diffResult[i].removed) {
+        totalChanges += diffResult[i]?.count ?? 0;
+      }
+    }
+
+
+
+    this.setState({ completionPerc: 100 - Math.round((charChangesRamaining / totalChanges) * 100) })
+  }
+
 
   // Reset the timer
   resetTimer = () => {
@@ -131,20 +180,6 @@ export class Editor extends Component<{}, EditorFormState> {
     }
   }
 
-  handleCurrentTextChange = (newText: string) => {
-    this.setState((prevState) => ({
-      problem: {
-        ...prevState.problem,
-        currentText: newText,
-      },
-    }));
-  };
-
-  updateCurrentText = (newText: string) => {
-    this.setState((prevState) => ({
-      problem: { ...prevState.problem, currentText: newText }
-    }));
-  };
 
   // Method to generate the diff output
   renderDiff = () => {
@@ -199,8 +234,8 @@ export class Editor extends Component<{}, EditorFormState> {
             value={this.state.elapsedSeconds}
             title="Time"
             colorMap={timerColorMap} />
-          <ValueDisplay value={76} title="Speed" unit="WPM" colorMap={speedColorMap} />
-          <ValueDisplay value={49} title="Completion" unit="%" colorMap={completionColorMap} />
+          <ValueDisplay value={this.state.wordsPerMin} title="Speed" unit="CCPM" colorMap={speedColorMap} />
+          <ValueDisplay value={this.state.completionPerc} title="Completion" unit="%" colorMap={completionColorMap} />
         </div>
         <div className="form-container">
           <div className="form-editor">
