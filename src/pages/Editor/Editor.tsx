@@ -5,7 +5,8 @@ import ValueDisplay from "../../components/ValueDisplay/ValueDisplay";
 import ColorMap from "../../models/ColorMap";
 import Problem from "../../models/Problem";
 import * as Diff from "diff"
-
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { coy } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 
 
@@ -190,13 +191,19 @@ export class Editor extends Component<{}, EditorFormState> {
       // Determine the style based on the change type
       const style = {
         backgroundColor: part.added ? "lightgreen" : part.removed ? "salmon" : "transparent",
-        color: part.removed ? "black" : part.added ? "Black" : "#edf8ff"
+        background: "none"
       };
 
       return (
-        <span key={index} style={style}>
+        <SyntaxHighlighter
+          language="javascript"
+          style={coy}
+          customStyle={style}
+          key={index}
+          className="diff-part"
+        >
           {part.value}
-        </span>
+        </SyntaxHighlighter>
       );
     });
   };
@@ -240,13 +247,14 @@ export class Editor extends Component<{}, EditorFormState> {
         <div className="form-container">
           <div className="form-editor">
             <div>
-              <textarea
-                id="editor"
-                className="form"
-                value={this.state.problem.currentText}
-                onChange={this.handleChange}
-                onKeyDown={this.handleKeyDown}
-              />
+                <textarea
+                  id="editor"
+                  className="form"
+                  value={this.state.problem.currentText}
+                  onChange={this.handleChange}
+                  onKeyDown={this.handleKeyDown}
+                />
+
             </div>
           </div>
           <div className="form-diff">
