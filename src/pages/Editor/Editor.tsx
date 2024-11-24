@@ -15,22 +15,46 @@ const problems: Problem[] = [
   {
     originalText: "interface TimerState {\n   time: number;\n   isRunning: boolean;\n}",
     modifiedText: "interface TimerState {\n   time: number;\n}",
-    currentText: "interface TimerState {\n   time: number;\n   isRunning: boolean;\n}"
+    currentText: "interface TimerState {\n   time: number;\n   isRunning: boolean;\n}",
+    problemId: "01234",
+    problemStats : {
+      timeStats : [1,2,4,8,8,4,2,1],
+      CCPMStats : [1,2,4,8,8,4,2,1],
+      keyStroksStats : [1,2,4,8,8,4,2,1]
+    }
   },
   {
     originalText: "1",
     modifiedText: "1",
-    currentText: "1"
+    currentText: "1",
+    problemId: "01234",
+    problemStats : {
+      timeStats : [1,2,4,8,8,4,2,1],
+      CCPMStats : [1,2,4,8,8,4,2,1],
+      keyStroksStats : [1,2,4,8,8,4,2,1]
+    }
   },
   {
     originalText: "2",
     modifiedText: "2",
-    currentText: "1"
+    currentText: "1",
+    problemId: "01234",
+    problemStats : {
+      timeStats : [1,2,4,8,8,4,2,1],
+      CCPMStats : [1,2,4,8,8,4,2,1],
+      keyStroksStats : [1,2,4,8,8,4,2,1]
+    }
   },
   {
     originalText: "3",
     modifiedText: "3",
-    currentText: "1"
+    currentText: "1",
+    problemId: "01234",
+    problemStats : {
+      timeStats : [1,2,4,8,8,4,2,1],
+      CCPMStats : [1,2,4,8,8,4,2,1],
+      keyStroksStats : [1,2,4,8,8,4,2,1]
+    }
   },
 ]
 
