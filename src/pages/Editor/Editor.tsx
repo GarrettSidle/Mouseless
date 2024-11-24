@@ -2,10 +2,9 @@ import { Component } from "react";
 
 import "./Editor.css";
 import ValueDisplay from "../../components/ValueDisplay/ValueDisplay";
-import EditorForm from "../../components/Forms/EditorForm";
-import DiffForm from "../../components/Forms/DiffForm";
 import ColorMap from "../../models/ColorMap";
 import Problem from "../../models/Problem";
+import * as Diff from "diff"
 
 
 
@@ -15,22 +14,22 @@ const problems: Problem[] = [
   {
     originalText: "interface TimerState {\n   time: number;\n   isRunning: boolean;\n}",
     modifiedText: "interface TimerState {\n   time: number;\n}",
-    currentText : "interface TimerState {\n   time: number;\n   isRunning: boolean;\n}"
+    currentText: "interface TimerState {\n   time: number;\n   isRunning: boolean;\n}"
   },
   {
     originalText: "1",
     modifiedText: "1",
-    currentText : ""
+    currentText: "1"
   },
   {
     originalText: "2",
     modifiedText: "2",
-    currentText : ""
+    currentText: "1"
   },
   {
     originalText: "3",
     modifiedText: "3",
-    currentText : ""
+    currentText: "1"
   },
 ]
 
@@ -81,6 +80,15 @@ export class Editor extends Component<{}, EditorFormState> {
     this.setState({ problem: problems[index] })
   }
 
+  resetProblem() {
+    this.setState((prevState) => ({
+      problem: {
+        ...prevState.problem,
+        currentText: this.state.problem.originalText,
+      },
+    }))
+  }
+
   // Start the timer
   startTimer = () => {
     if (!this.state.isRunning) {
@@ -127,7 +135,7 @@ export class Editor extends Component<{}, EditorFormState> {
     this.setState((prevState) => ({
       problem: {
         ...prevState.problem,
-        currentText: newText, 
+        currentText: newText,
       },
     }));
   };
@@ -138,6 +146,49 @@ export class Editor extends Component<{}, EditorFormState> {
     }));
   };
 
+  // Method to generate the diff output
+  renderDiff = () => {
+    const { currentText, modifiedText } = this.state.problem;
+    const diffResult = Diff.diffWords(currentText, modifiedText);  // Get character-level diff
+
+    return diffResult.map((part, index) => {
+      // Determine the style based on the change type
+      const style = {
+        backgroundColor: part.added ? "lightgreen" : part.removed ? "salmon" : "transparent",
+        color: part.removed ? "black" : part.added ? "Black" : "#edf8ff"
+      };
+
+      return (
+        <span key={index} style={style}>
+          {part.value}
+        </span>
+      );
+    });
+  };
+
+  handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+
+  };
+
+  applyFormatting = (prefix: string, suffix: string = "") => {
+    const textarea = document.getElementById("editor") as HTMLTextAreaElement;
+    const { selectionStart, selectionEnd } = textarea;
+    const content = this.state.problem.currentText;
+
+    const before = content.slice(0, selectionStart);
+    const selected = content.slice(selectionStart, selectionEnd);
+    const after = content.slice(selectionEnd);
+
+    this.setState((prevState) => ({
+      problem: { ...prevState.problem, currentText: before + prefix + selected + suffix + after }
+    }));
+  }
+
+  handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    this.setState((prevState) => ({
+      problem: { ...prevState.problem, currentText: event.target.value }
+    }));
+  };
 
   public render() {
     return (
@@ -152,11 +203,25 @@ export class Editor extends Component<{}, EditorFormState> {
           <ValueDisplay value={49} title="Completion" unit="%" colorMap={completionColorMap} />
         </div>
         <div className="form-container">
-          <div className="form-editor"><EditorForm onCurrentTextChange = {this.updateCurrentText} problem={this.state.problem} /></div>
-          <div className="form-diff"><DiffForm onCurrentTextChange={this.handleCurrentTextChange} problem={this.state.problem} /></div>
+          <div className="form-editor">
+            <div>
+              <textarea
+                id="editor"
+                className="form"
+                value={this.state.problem.currentText}
+                onChange={this.handleChange}
+                onKeyDown={this.handleKeyDown}
+              />
+            </div>
+          </div>
+          <div className="form-diff">
+            <div className="form diff" >
+              {this.renderDiff()}
+            </div>
+          </div>
         </div>
         <div className="editor-buttons">
-          <button onClick={() => { }}>Reset</button>
+          <button onClick={() => { this.resetProblem() }}>Reset</button>
           <button onClick={() => { this.skipProblem() }}>Skip</button>
         </div>
       </div>
