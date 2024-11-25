@@ -52,12 +52,3 @@ export class ValueDisplay extends Component<ValueProps> {
 }
 export default ValueDisplay;
 
-
-<div className="circle-container">
-    <div className="circle">
-        <span className="value">42</span>
-    </div>
-    <div className="unit-box">
-        <span className="unit">kg</span>
-    </div>
-</div>

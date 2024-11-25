@@ -1,0 +1,101 @@
+.stats-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    padding-top: 78px;
+    padding-bottom: 1%;
+}
+
+.statistics {
+    padding: 20px;
+    text-align: center;
+
+    margin: auto;
+    margin-top: 10px;
+    border: 1px solid #2095f4;
+    border-radius: 15px;
+    background-color: #28323a;
+
+    width: 50vw;
+
+}
+
+.charts-container {}
+
+.statistics h1 {
+    margin: 0px;
+}
+
+.chart-container {}
+
+.chart {
+    margin: auto;
+}
+
+.chart-stats-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+}
+
+.user-value {}
+
+.chart-percentile {}
+
+.charts-container hr {
+    border-color: rgb(82, 82, 82);
+    width: 90%;
+    margin: 0;
+}
+
+
+.button-container {
+    gap: 5%;
+    display: flex;
+    width: 35%;
+    margin: auto;
+    margin-top: 2%;
+}
+
+.legend {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.legend-you {
+    margin-bottom: 5px 
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+
+}
+
+.legend-item div{
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+    border-radius: 2px;
+}
+
+.legend-you div{
+    background-color: green
+}
+
+.legend-personal-best div{
+    background-color: gold
+}

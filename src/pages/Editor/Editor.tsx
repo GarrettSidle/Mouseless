@@ -7,6 +7,7 @@ import Problem from "../../models/Problem";
 import * as Diff from "diff"
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { coy } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import Statistics from "../../components/Statistics/Statistics";
 
 
 
@@ -17,10 +18,10 @@ const problems: Problem[] = [
     modifiedText: "interface TimerState {\n   time: number;\n}",
     currentText: "interface TimerState {\n   time: number;\n   isRunning: boolean;\n}",
     problemId: "01234",
-    problemStats : {
-      timeStats : [1,2,4,8,8,4,2,1],
-      CCPMStats : [1,2,4,8,8,4,2,1],
-      keyStroksStats : [1,2,4,8,8,4,2,1]
+    problemStats: {
+      timeStats: [1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12, 7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12, 7, 4, 2, 1],
+      CCPMStats: [1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12, 7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12, 7, 4, 2, 1],
+      keyStroksStats: [1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12, 7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12, 7, 4, 2, 1],
     }
   },
   {
@@ -28,10 +29,10 @@ const problems: Problem[] = [
     modifiedText: "1",
     currentText: "1",
     problemId: "01234",
-    problemStats : {
-      timeStats : [1,2,4,8,8,4,2,1],
-      CCPMStats : [1,2,4,8,8,4,2,1],
-      keyStroksStats : [1,2,4,8,8,4,2,1]
+    problemStats: {
+      timeStats: [1, 2, 4, 8, 8, 4, 2, 1],
+      CCPMStats: [1, 2, 4, 8, 8, 4, 2, 1],
+      keyStroksStats: [1, 2, 4, 8, 8, 4, 2, 1]
     }
   },
   {
@@ -39,10 +40,10 @@ const problems: Problem[] = [
     modifiedText: "2",
     currentText: "1",
     problemId: "01234",
-    problemStats : {
-      timeStats : [1,2,4,8,8,4,2,1],
-      CCPMStats : [1,2,4,8,8,4,2,1],
-      keyStroksStats : [1,2,4,8,8,4,2,1]
+    problemStats: {
+      timeStats: [1, 2, 4, 8, 8, 4, 2, 1],
+      CCPMStats: [1, 2, 4, 8, 8, 4, 2, 1],
+      keyStroksStats: [1, 2, 4, 8, 8, 4, 2, 1]
     }
   },
   {
@@ -50,10 +51,10 @@ const problems: Problem[] = [
     modifiedText: "3",
     currentText: "1",
     problemId: "01234",
-    problemStats : {
-      timeStats : [1,2,4,8,8,4,2,1],
-      CCPMStats : [1,2,4,8,8,4,2,1],
-      keyStroksStats : [1,2,4,8,8,4,2,1]
+    problemStats: {
+      timeStats: [1, 2, 4, 8, 8, 4, 2, 1],
+      CCPMStats: [1, 2, 4, 8, 8, 4, 2, 1],
+      keyStroksStats: [1, 2, 4, 8, 8, 4, 2, 1]
     }
   },
 ]
@@ -68,6 +69,7 @@ interface EditorFormState {
   problem: Problem;
   wordsPerMin: number;
   completionPerc: number;
+  hideStats: boolean;
 }
 
 
@@ -98,18 +100,19 @@ export class Editor extends Component<{}, EditorFormState> {
       problem: problems[0],
       wordsPerMin: 0,
       completionPerc: 0,
+      hideStats : true
     };
     this.startTimer()
   }
 
   private timer: NodeJS.Timeout | null = null;  // Timer interval reference
 
-  skipProblem() {
-    var index = Math.floor(Math.random() * (problems.length))
-    this.setState({ problem: problems[index] })
-  }
+  skipProblem = () => {
+    var index = Math.floor(Math.random() * problems.length);
+    this.setState({ problem: problems[index] });
+  };
 
-  resetProblem() {
+  resetProblem = () => {
     this.setState((prevState) => ({
       problem: {
         ...prevState.problem,
@@ -258,7 +261,17 @@ export class Editor extends Component<{}, EditorFormState> {
 
   public render() {
     return (
-      <div className="editor page">
+      <div className={`editor page`}>
+      <div className={this.state.hideStats?"hidden":""}>
+        <Statistics
+          problem={this.state.problem}
+          userPositionTime={140}
+          userPositionStrokes={5}
+          userPositionCCPM={120}
+          resetProblem={this.resetProblem}
+          skipProblem={this.skipProblem}
+        />
+        </div>
         <div className="value-displays">
           <ValueDisplay
             viewable={`${this.state.minutes.toString().padStart(2, '0')}:${this.state.seconds.toString().padStart(2, '0')}`}
@@ -270,16 +283,13 @@ export class Editor extends Component<{}, EditorFormState> {
         </div>
         <div className="form-container">
           <div className="form-editor">
-            <div>
-                <textarea
-                  id="editor"
-                  className="form"
-                  value={this.state.problem.currentText}
-                  onChange={this.handleChange}
-                  onKeyDown={this.handleKeyDown}
-                />
-
-            </div>
+            <textarea
+              id="editor"
+              className="form"
+              value={this.state.problem.currentText}
+              onChange={this.handleChange}
+              onKeyDown={this.handleKeyDown}
+            />
           </div>
           <div className="form-diff">
             <div className="form diff" >
