@@ -26,7 +26,7 @@ const problems: Problem[] = [
   },
   {
     originalText: "1",
-    modifiedText: "1",
+    modifiedText: "12",
     currentText: "1",
     problemId: "01234",
     problemStats: {
@@ -36,7 +36,7 @@ const problems: Problem[] = [
     }
   },
   {
-    originalText: "2",
+    originalText: "1",
     modifiedText: "2",
     currentText: "1",
     problemId: "01234",
@@ -48,8 +48,8 @@ const problems: Problem[] = [
   },
   {
     originalText: "3",
-    modifiedText: "3",
-    currentText: "1",
+    modifiedText: "355",
+    currentText: "3",
     problemId: "01234",
     problemStats: {
       timeStats: [1, 2, 4, 8, 8, 4, 2, 1],
@@ -68,7 +68,8 @@ interface EditorFormState {
   elapsedSeconds: number;
   problem: Problem;
   wordsPerMin: number;
-  completionPerc: number;
+  completionPerc: number; 
+  strokes: number;
   hideStats: boolean;
 }
 
@@ -88,6 +89,12 @@ const completionColorMap: ColorMap = {
   centerCutoff: 50,
   isInverted: false,
 };
+const strokesColorMap: ColorMap = {
+  upperCutoff: 30,
+  centerCutoff: 15,
+  isInverted: true,
+}
+
 
 export class Editor extends Component<{}, EditorFormState> {
   constructor(props: {}) {
@@ -100,7 +107,8 @@ export class Editor extends Component<{}, EditorFormState> {
       problem: problems[0],
       wordsPerMin: 0,
       completionPerc: 0,
-      hideStats : true
+      hideStats: true,
+      strokes : 0
     };
     this.startTimer()
   }
@@ -108,11 +116,29 @@ export class Editor extends Component<{}, EditorFormState> {
   private timer: NodeJS.Timeout | null = null;  // Timer interval reference
 
   skipProblem = () => {
+    var isStatsHidden = !this.state.isRunning
     var index = Math.floor(Math.random() * problems.length);
-    this.setState({ problem: problems[index] });
+    this.setState({
+      problem: problems[index],
+      elapsedSeconds: 0,
+      seconds: 0,
+      minutes: 0,
+      hideStats : true
+    });
+    this.calculateSpeed()
+    this.calculateCompletion()
+    // if (!this.state.isRunning) {
+    //   this.startTimer()
+    // }
   };
 
+  completeProblem() {
+    this.pauseTimer();
+    this.setState({ hideStats: false })
+  }
+
   resetProblem = () => {
+    var isStatsHidden = !this.state.isRunning
     this.setState((prevState) => ({
       problem: {
         ...prevState.problem,
@@ -120,9 +146,20 @@ export class Editor extends Component<{}, EditorFormState> {
       },
       elapsedSeconds: 0,
       seconds: 0,
-      minutes: 0
+      minutes: 0,
+      hideStats : true
     }))
+    this.calculateSpeed()
+    this.calculateCompletion()
+
+
+    // if (!this.state.isRunning) {
+    //   this.startTimer()
+    // }
+
   }
+
+
 
   // Start the timer
   startTimer = () => {
@@ -141,6 +178,10 @@ export class Editor extends Component<{}, EditorFormState> {
 
         this.calculateSpeed();
         this.calculateCompletion()
+
+        if (this.state.problem.currentText == this.state.problem.modifiedText) {
+          this.completeProblem()
+        }
 
       }, 1000);
       this.setState({ isRunning: true });
@@ -199,6 +240,12 @@ export class Editor extends Component<{}, EditorFormState> {
       clearInterval(this.timer);
     }
     this.setState({ seconds: 0, isRunning: false });
+  };
+  pauseTimer = () => {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+    this.setState({ isRunning: false });
   };
 
   // Clear the timer interval when the component unmounts
@@ -262,15 +309,15 @@ export class Editor extends Component<{}, EditorFormState> {
   public render() {
     return (
       <div className={`editor page`}>
-      <div className={this.state.hideStats?"hidden":""}>
-        <Statistics
-          problem={this.state.problem}
-          userPositionTime={140}
-          userPositionStrokes={5}
-          userPositionCCPM={120}
-          resetProblem={this.resetProblem}
-          skipProblem={this.skipProblem}
-        />
+        <div className={this.state.hideStats ? "hidden" : ""}>
+          <Statistics
+            problem={this.state.problem}
+            userPositionTime={140}
+            userPositionStrokes={5}
+            userPositionCCPM={120}
+            resetProblem={this.resetProblem}
+            skipProblem={this.skipProblem}
+          />
         </div>
         <div className="value-displays">
           <ValueDisplay
@@ -280,6 +327,7 @@ export class Editor extends Component<{}, EditorFormState> {
             colorMap={timerColorMap} />
           <ValueDisplay value={this.state.wordsPerMin} title="Speed" unit="CCPM" colorMap={speedColorMap} />
           <ValueDisplay value={this.state.completionPerc} title="Completion" unit="%" colorMap={completionColorMap} />
+          <ValueDisplay value={this.state.strokes} title="Key Strokes" colorMap={strokesColorMap} />
         </div>
         <div className="form-container">
           <div className="form-editor">
