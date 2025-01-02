@@ -1,8 +1,9 @@
 import { Component } from "react";
 import "./Login.css";
+import { postRequest } from '../../utils/api';
 
 interface LoginFormState {
-  isSignUp: boolean; 
+  isSignUp: boolean;
   email: string;
   password: string;
 }
@@ -11,10 +12,10 @@ export class Login extends Component<{}, LoginFormState> {
   constructor(props: {}) {
     super(props);
     const urlParams = new URLSearchParams(window.location.search);
-    const isSignUp = urlParams.get("page") === "signUp"; 
+    const isSignUp = urlParams.get("page") === "signUp";
 
     this.state = {
-      isSignUp: isSignUp, 
+      isSignUp: isSignUp,
       email: '',
       password: '',
     };
@@ -24,8 +25,8 @@ export class Login extends Component<{}, LoginFormState> {
   handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     this.setState((prevState) => ({
-      ...prevState, 
-      [name]: value, 
+      ...prevState,
+      [name]: value,
     }));
   };
 
@@ -43,6 +44,14 @@ export class Login extends Component<{}, LoginFormState> {
     // Logic for submitting form (e.g., validation, API calls)
     console.log('Submitted:', this.state.email, this.state.password);
   };
+
+  async handleLogin() {
+      const endpoint = 'https://api.example.com/create-user';
+      return postRequest<{ id: string }>({
+        endpoint,
+      });
+    }
+  }
 
   public render() {
     const { isSignUp, email, password } = this.state;
@@ -79,7 +88,7 @@ export class Login extends Component<{}, LoginFormState> {
               />
             </div>
 
-            <button type="submit">{isSignUp ? "Sign Up" : "Sign In"}</button>
+            <button type="submit" onClick={() => { handleLogin() }}>{isSignUp ? "Sign Up" : "Sign In"}</button>
           </form>
 
           <p className="toggle-form">
