@@ -45,11 +45,19 @@ export class Login extends Component<{}, LoginFormState> {
     console.log('Submitted:', this.state.email, this.state.password);
   };
 
-  async handleLogin() {
-      const endpoint = 'https://api.example.com/create-user';
-      return postRequest<{ id: string }>({
-        endpoint,
+  private async handleLogin() {
+  
+    try {
+      const response = await postRequest<{ id: string }>({
+        endpoint : "https://api.example.com/create-user",
+        data: {
+          password: '',
+          email: 'john@example.com',
+        },
       });
+      console.log('User created with ID:', response.id);
+    } catch (error) {
+      console.error('Failed to create user:', error);
     }
   }
 
@@ -88,7 +96,7 @@ export class Login extends Component<{}, LoginFormState> {
               />
             </div>
 
-            <button type="submit" onClick={() => { handleLogin() }}>{isSignUp ? "Sign Up" : "Sign In"}</button>
+            <button type="submit" onClick={() => { this.handleLogin() }}>{isSignUp ? "Sign Up" : "Sign In"}</button>
           </form>
 
           <p className="toggle-form">

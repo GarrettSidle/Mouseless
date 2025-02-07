@@ -1,70 +1,43 @@
-# Getting Started with Create React App
+# Mouseless.us
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## How to run
+In order to run the project you simply need to install the required dependencies.
+`npm install`
 
-## Available Scripts
+Then start the program.
+`npm start`
 
-In the project directory, you can run:
+*This project is still in progress.*
 
-### `npm start`
+![Home](Captures/Overview.png)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+As a developer, speed and efficiency are critical when working with code. Traditional typing practice tools focus on raw words-per-minute, but coding requires a different approach—one that emphasizes keybindings, syntax manipulation, and precision. That’s where **Mouseless** comes in.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## What is Mouseless?
+**Mouseless** is a web-based typing practice platform designed specifically for developers. Unlike standard typing tests, it presents users with real code snippets and requires them to modify the code to match a given output. This approach helps reinforce essential developer skills, including:
 
-### `npm test`
+- Mastering **keybindings** for rapid navigation and editing
+- Efficiently manipulating code **without relying on a mouse**
+- Improving **speed** and **accuracy** in a real-world coding environment
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Technology Stack
+Mouseless is built with scalability and performance in mind, leveraging a modern, efficient stack:
 
-### `npm run build`
+- **Frontend**: A **React** application providing a dynamic, responsive interface
+- **Backend**: A **Django API** handling business logic and data management
+- **Database**: **PostgreSQL** for handling most requests, ensuring robust data storage
+- **Caching**: **Redis** for session ID validation, optimizing authentication performance
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This architecture allows the system to scale efficiently, handling high user traffic without performance degradation.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Tracking Progress with Real Data
+Mouseless doesn’t just provide exercises—it also tracks detailed performance statistics over time. Users can view:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Personal improvement trends** based on speed and accuracy
+- **Community-wide averages** for meaningful comparisons
+- **Historical data** to measure long-term progress
 
-### `npm run eject`
+This analytical approach gives users clear insights into their efficiency gains and helps them refine their workflow.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Custom Authentication System
+Rather than relying on third-party authentication services, I implemented a **custom authentication system** using **password hashing**, **salting**, and **session-based authentication**. This approach ensures security while integrating seamlessly with the session ID system backed by Redis.
