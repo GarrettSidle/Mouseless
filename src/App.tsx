@@ -3,7 +3,7 @@ import "./App.css";
 import Navigation from "./components/Navigation/Navigation";
 import Editor from "./pages/Editor/Editor";
 import Login from "./pages/Login/Login";
-
+import Shortcuts from "./pages/Shortcuts/Shortcuts";
 
 interface RouterState {
   currentPath: string;
@@ -45,6 +45,9 @@ class App extends Component<{}, RouterState> {
       case "/Login":
         ComponentToRender = Login;
         break;
+      case "/Shortcuts":
+        ComponentToRender = Shortcuts;
+        break;
       default:
         ComponentToRender = () => <div>404 Not Found</div>;
     }
@@ -59,4 +62,3 @@ class App extends Component<{}, RouterState> {
 }
 
 export default App;
-

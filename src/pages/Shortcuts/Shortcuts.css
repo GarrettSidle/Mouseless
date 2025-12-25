@@ -1,0 +1,295 @@
+.shortcuts-page {
+  min-height: 100vh;
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  background: #0f1419;
+}
+
+.shortcuts-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.shortcuts-header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  background: linear-gradient(135deg, #4A9EFF 0%, #A78BFA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shortcuts-header .subtitle {
+  font-size: 1.2rem;
+  color: rgba(239, 244, 244, 0.7);
+  margin: 0;
+}
+
+.shortcuts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.shortcuts-category {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.category-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 4px solid;
+  color: #eff4f4;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.shortcuts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 1.5rem;
+}
+
+.shortcut-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.shortcut-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(148, 163, 184, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.shortcut-card.active {
+  border-color: #4A9EFF;
+  box-shadow: 0 0 20px rgba(74, 158, 255, 0.3);
+  background: rgba(30, 41, 59, 0.9);
+}
+
+.shortcut-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.shortcut-info {
+  flex: 1;
+}
+
+.shortcut-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #eff4f4;
+}
+
+.shortcut-description {
+  font-size: 0.95rem;
+  color: rgba(239, 244, 244, 0.7);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.shortcut-keys {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.key-badge {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  background: rgba(74, 158, 255, 0.15);
+  border: 1px solid rgba(74, 158, 255, 0.3);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4A9EFF;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.key-badge:hover {
+  background: rgba(74, 158, 255, 0.25);
+  border-color: rgba(74, 158, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.key-separator {
+  color: rgba(239, 244, 244, 0.5);
+  margin: 0 0.25rem;
+  font-weight: 600;
+}
+
+.shortcut-demo {
+  margin-top: 1rem;
+}
+
+.demo-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #4A9EFF 0%, #5B8DEF 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+}
+
+.demo-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(74, 158, 255, 0.4);
+  background: linear-gradient(135deg, #5B8DEF 0%, #6B9DFF 100%);
+}
+
+.demo-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.demo-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(74, 158, 255, 0.3);
+}
+
+.editor-container {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.shortcut-card.active .editor-container {
+  border-color: rgba(74, 158, 255, 0.4);
+  box-shadow: 0 4px 16px rgba(74, 158, 255, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .shortcuts-page {
+    padding: 1rem;
+  }
+
+  .shortcuts-header h1 {
+    font-size: 2rem;
+  }
+
+  .shortcuts-header .subtitle {
+    font-size: 1rem;
+  }
+
+  .shortcuts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .shortcut-header {
+    flex-direction: column;
+  }
+
+  .shortcut-keys {
+    width: 100%;
+  }
+
+  .category-title {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .shortcuts-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .shortcut-name {
+    font-size: 1.1rem;
+  }
+
+  .key-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* Stagger animation for cards */
+.shortcuts-grid > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.shortcuts-grid > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.shortcuts-grid > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.shortcuts-grid > *:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.shortcuts-grid > *:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.shortcuts-grid > *:nth-child(n+6) {
+  animation-delay: 0.6s;
+}
+
