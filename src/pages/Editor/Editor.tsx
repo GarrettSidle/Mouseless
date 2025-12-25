@@ -254,6 +254,8 @@ export class Editor extends Component<{}, EditorFormState> {
   private timer: NodeJS.Timeout | null = null; // Timer interval reference
   private _isMounted: boolean = true; // Track if component is mounted (start as true)
   private diffEditorRef: any = null; // Reference to DiffEditor instance
+  private monacoEditorRef: any = null; // Reference to Monaco Editor instance
+  private keystrokeDisposer: (() => void) | null = null; // Disposer for keystroke listener
 
   skipProblem = () => {
     var isStatsHidden = !this.state.isRunning;
@@ -285,6 +287,7 @@ export class Editor extends Component<{}, EditorFormState> {
             hideStats: true,
             isRunning: false,
             showDiffEditor: true,
+            strokes: 0,
           },
           () => {
             // Restart timer after state has been updated
@@ -343,6 +346,7 @@ export class Editor extends Component<{}, EditorFormState> {
             hideStats: true,
             isRunning: false,
             showDiffEditor: true,
+            strokes: 0,
           }),
           () => {
             // Restart timer after state has been updated
@@ -515,6 +519,11 @@ export class Editor extends Component<{}, EditorFormState> {
       }
       this.diffEditorRef = null;
     }
+    // Clean up keystroke tracking
+    if (this.keystrokeDisposer) {
+      this.keystrokeDisposer();
+      this.keystrokeDisposer = null;
+    }
     // Remove keyboard event listener
     window.removeEventListener("keydown", this.handleKeyPress);
   }
@@ -523,6 +532,69 @@ export class Editor extends Component<{}, EditorFormState> {
   handleDiffEditorDidMount = (editor: any) => {
     this.diffEditorRef = editor;
     this.disableEditorDiagnostics(editor);
+  };
+
+  // Handle Monaco Editor mount
+  handleMonacoEditorDidMount = (editor: any) => {
+    this.monacoEditorRef = editor;
+    this.disableEditorDiagnostics(editor);
+    this.setupKeystrokeTracking(editor);
+  };
+
+  // Setup keystroke tracking for the editor
+  setupKeystrokeTracking = (editor: any) => {
+    // Clean up any existing listener
+    if (this.keystrokeDisposer) {
+      this.keystrokeDisposer();
+      this.keystrokeDisposer = null;
+    }
+
+    // Get the editor's DOM element
+    const editorDomNode = editor.getDomNode();
+    if (!editorDomNode) return;
+
+    // Create a handler for keydown events
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only count keystrokes when the timer is running
+      if (!this.state.isRunning) {
+        return;
+      }
+
+      // Check if the editor has focus (the event target should be within the editor)
+      if (!editorDomNode.contains(event.target as Node)) {
+        return;
+      }
+
+      // Skip modifier keys when pressed alone (Ctrl, Alt, Shift, Meta)
+      // These should only count when combined with another key
+      const isModifierKey =
+        event.key === "Control" ||
+        event.key === "Alt" ||
+        event.key === "Shift" ||
+        event.key === "Meta" ||
+        event.key === "OS";
+
+      // If it's a modifier key alone (no other key being pressed), don't count it
+      // When you press Ctrl+X, the event for X will have ctrlKey=true, but key will be "x", not "Control"
+      // So we skip events where the key itself is a modifier key
+      if (isModifierKey) {
+        return;
+      }
+
+      // Increment strokes counter for all other key presses
+      // This includes regular keys, and key combinations (like Ctrl+X counts as 1 stroke)
+      this.setState((prevState) => ({
+        strokes: prevState.strokes + 1,
+      }));
+    };
+
+    // Add event listener to the editor's DOM node
+    editorDomNode.addEventListener("keydown", handleKeyDown);
+
+    // Store disposer function
+    this.keystrokeDisposer = () => {
+      editorDomNode.removeEventListener("keydown", handleKeyDown);
+    };
   };
 
   // Disable all diagnostics/validation in Monaco Editor for all languages
@@ -726,6 +798,7 @@ export class Editor extends Component<{}, EditorFormState> {
                 theme="vs-dark"
                 value={this.state.problem.currentText}
                 onChange={this.handleChange}
+                onMount={this.handleMonacoEditorDidMount}
                 beforeMount={(monaco: any) => {
                   // Disable all diagnostics for all languages before editor mounts
                   this.disableAllLanguageDiagnostics(monaco);
