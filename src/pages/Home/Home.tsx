@@ -1,43 +1,10 @@
 import { Component } from "react";
 import "./Home.css";
 
-interface Feature {
-  icon: string;
-  title: string;
-  description: string;
-}
-
 interface Stat {
   value: string;
   label: string;
 }
-
-const features: Feature[] = [
-  {
-    icon: "⌨️",
-    title: "Keyboard-First Learning",
-    description:
-      "Master essential VSCode shortcuts and keybindings through hands-on practice with real code.",
-  },
-  {
-    icon: "🚀",
-    title: "Real Code Challenges",
-    description:
-      "Practice with actual code snippets, not random text. Learn to navigate and edit code efficiently.",
-  },
-  {
-    icon: "📊",
-    title: "Track Your Progress",
-    description:
-      "Monitor your speed, accuracy, and improvement over time with detailed performance analytics.",
-  },
-  {
-    icon: "🎯",
-    title: "Precision Training",
-    description:
-      "Develop muscle memory for common coding tasks like refactoring, navigation, and text manipulation.",
-  },
-];
 
 const stats: Stat[] = [
   { value: "10x", label: "Faster Navigation" },

@@ -1,6 +1,6 @@
 import { Component } from "react";
 import "./Login.css";
-import { postRequest } from '../../utils/api';
+import { postRequest } from "../../utils/api";
 
 interface LoginFormState {
   isSignUp: boolean;
@@ -16,8 +16,8 @@ export class Login extends Component<{}, LoginFormState> {
 
     this.state = {
       isSignUp: isSignUp,
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     };
   }
 
@@ -30,7 +30,6 @@ export class Login extends Component<{}, LoginFormState> {
     }));
   };
 
-
   // Toggle between Sign Up and Sign In
   toggleForm = () => {
     this.setState((prevState) => ({
@@ -42,22 +41,21 @@ export class Login extends Component<{}, LoginFormState> {
   handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     // Logic for submitting form (e.g., validation, API calls)
-    console.log('Submitted:', this.state.email, this.state.password);
+    console.log("Submitted:", this.state.email, this.state.password);
   };
 
   private async handleLogin() {
-  
     try {
       const response = await postRequest<{ id: string }>({
-        endpoint : "https://api.example.com/create-user",
+        endpoint: "https://api.example.com/create-user",
         data: {
-          password: '',
-          email: 'john@example.com',
+          password: "",
+          email: "john@example.com",
         },
       });
-      console.log('User created with ID:', response.id);
+      console.log("User created with ID:", response.id);
     } catch (error) {
-      console.error('Failed to create user:', error);
+      console.error("Failed to create user:", error);
     }
   }
 
@@ -67,9 +65,13 @@ export class Login extends Component<{}, LoginFormState> {
     return (
       <div className="login-page">
         <div className="login-container">
-          <h1>{isSignUp ? "Sign Up" : "Sign In"}</h1>
+          <div className="login-header">
+            <h1 className="login-title">
+              {isSignUp ? "Create Account" : "Welcome Back"}
+            </h1>
+          </div>
 
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit} className="login-form">
             <div className="input-group">
               <label htmlFor="email">Email</label>
               <input
@@ -77,9 +79,10 @@ export class Login extends Component<{}, LoginFormState> {
                 id="email"
                 name="email"
                 value={email}
-                placeholder="Enter your email"
+                placeholder="you@example.com"
                 onChange={this.handleInputChange}
                 required
+                autoComplete="email"
               />
             </div>
 
@@ -93,26 +96,47 @@ export class Login extends Component<{}, LoginFormState> {
                 onChange={this.handleInputChange}
                 placeholder="Enter your password"
                 required
+                autoComplete={isSignUp ? "new-password" : "current-password"}
               />
             </div>
 
-            <button type="submit" onClick={() => { this.handleLogin() }}>{isSignUp ? "Sign Up" : "Sign In"}</button>
+            <button
+              type="submit"
+              className="login-button"
+              onClick={() => {
+                this.handleLogin();
+              }}
+            >
+              {isSignUp ? "Create Account" : "Sign In"}
+            </button>
           </form>
+
+          <div className="login-divider">
+            <span>or</span>
+          </div>
 
           <p className="toggle-form">
             {isSignUp ? (
               <>
                 Already have an account?{" "}
-                <span onClick={this.toggleForm} className="link">
+                <button
+                  type="button"
+                  onClick={this.toggleForm}
+                  className="toggle-link"
+                >
                   Sign In
-                </span>
+                </button>
               </>
             ) : (
               <>
                 Don't have an account?{" "}
-                <span onClick={this.toggleForm} className="link">
+                <button
+                  type="button"
+                  onClick={this.toggleForm}
+                  className="toggle-link"
+                >
                   Sign Up
-                </span>
+                </button>
               </>
             )}
           </p>

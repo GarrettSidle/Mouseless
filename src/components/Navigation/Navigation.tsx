@@ -74,13 +74,13 @@ export class navigation extends Component<
               className="nav-brand"
               onClick={(e) => this.handleLinkClick(e, "/Home")}
             >
-              <span className="brand-icon">⌨️</span>
               <span className="brand-text">Mouseless</span>
             </a>
 
             <div className={`nav-links ${navUnfolded ? "mobile-open" : ""}`}>
               {navLinks.map((navLink) => {
-                const isActive = currentPath === navLink.link || 
+                const isActive =
+                  currentPath === navLink.link ||
                   (navLink.link === "/Home" && currentPath === "/");
                 return (
                   <a
