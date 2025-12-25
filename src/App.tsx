@@ -4,6 +4,7 @@ import Navigation from "./components/Navigation/Navigation";
 import Editor from "./pages/Editor/Editor";
 import Login from "./pages/Login/Login";
 import Shortcuts from "./pages/Shortcuts/Shortcuts";
+import Home from "./pages/Home/Home";
 
 interface RouterState {
   currentPath: string;
@@ -37,7 +38,10 @@ class App extends Component<{}, RouterState> {
 
     switch (this.state.currentPath) {
       case "/":
-        ComponentToRender = Editor;
+        ComponentToRender = Home;
+        break;
+      case "/Home":
+        ComponentToRender = Home;
         break;
       case "/Editor":
         ComponentToRender = Editor;
