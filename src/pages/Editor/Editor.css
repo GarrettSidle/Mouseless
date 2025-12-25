@@ -1,10 +1,10 @@
 .form-container {
   width: 95%;
   max-width: 1600px;
-  margin: 2rem auto;
+  margin: 1rem auto;
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 1rem;
   justify-content: center;
   align-items: flex-start;
 }
@@ -52,13 +52,13 @@
   flex-wrap: wrap;
   width: 90%;
   max-width: 1200px;
-  margin: 2rem auto;
+  margin: 1rem auto;
   gap: 1.5rem;
   justify-content: center;
 }
 
 .editor-buttons {
-  margin: 2rem auto;
+  margin: 1rem auto;
   display: flex;
   gap: 1rem;
   justify-content: center;
@@ -71,7 +71,7 @@
   font-weight: 600;
   padding: 12px 32px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #2095f4 0%, #1a7dd4 100%);
+  background: linear-gradient(135deg, #202d38 0%, #1a7dd4 100%);
   color: #ffffff;
   cursor: pointer;
   border: none;
@@ -80,6 +80,7 @@
   box-shadow: 0 4px 12px rgba(32, 149, 244, 0.3);
   position: relative;
   overflow: hidden;
+  width: 10vw;
 }
 
 .editor-buttons button::before {

@@ -254,18 +254,27 @@ export class Editor extends Component<{}, EditorFormState> {
   skipProblem = () => {
     var isStatsHidden = !this.state.isRunning;
     var index = Math.floor(Math.random() * problems.length);
-    this.setState({
-      problem: problems[index],
-      elapsedSeconds: 0,
-      seconds: 0,
-      minutes: 0,
-      hideStats: true,
-    });
-    this.calculateSpeed();
-    this.calculateCompletion();
-    // if (!this.state.isRunning) {
-    //   this.startTimer()
-    // }
+    // Clear any existing timer first
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+    this.setState(
+      {
+        problem: problems[index],
+        elapsedSeconds: 0,
+        seconds: 0,
+        minutes: 0,
+        hideStats: true,
+        isRunning: false,
+      },
+      () => {
+        // Restart timer after state has been updated
+        this.calculateSpeed();
+        this.calculateCompletion();
+        this.startTimer();
+      }
+    );
   };
 
   completeProblem() {
@@ -275,22 +284,30 @@ export class Editor extends Component<{}, EditorFormState> {
 
   resetProblem = () => {
     var isStatsHidden = !this.state.isRunning;
-    this.setState((prevState) => ({
-      problem: {
-        ...prevState.problem,
-        currentText: this.state.problem.originalText,
-      },
-      elapsedSeconds: 0,
-      seconds: 0,
-      minutes: 0,
-      hideStats: true,
-    }));
-    this.calculateSpeed();
-    this.calculateCompletion();
-
-    // if (!this.state.isRunning) {
-    //   this.startTimer()
-    // }
+    // Clear any existing timer first
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+    this.setState(
+      (prevState) => ({
+        problem: {
+          ...prevState.problem,
+          currentText: this.state.problem.originalText,
+        },
+        elapsedSeconds: 0,
+        seconds: 0,
+        minutes: 0,
+        hideStats: true,
+        isRunning: false,
+      }),
+      () => {
+        // Restart timer after state has been updated
+        this.calculateSpeed();
+        this.calculateCompletion();
+        this.startTimer();
+      }
+    );
   };
 
   // Start the timer
@@ -408,12 +425,32 @@ export class Editor extends Component<{}, EditorFormState> {
     this.setState({ isRunning: false });
   };
 
+  componentDidMount() {
+    // Add keyboard event listener for hotkeys
+    window.addEventListener("keydown", this.handleKeyPress);
+  }
+
   // Clear the timer interval when the component unmounts
   componentWillUnmount() {
     if (this.timer) {
       clearInterval(this.timer);
     }
+    // Remove keyboard event listener
+    window.removeEventListener("keydown", this.handleKeyPress);
   }
+
+  handleKeyPress = (event: KeyboardEvent) => {
+    // Ctrl+R for reset (or Cmd+R on Mac)
+    if ((event.ctrlKey || event.metaKey) && event.key === "r") {
+      event.preventDefault();
+      this.resetProblem();
+    }
+    // Ctrl+S for skip (or Cmd+S on Mac)
+    if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+      event.preventDefault();
+      this.skipProblem();
+    }
+  };
 
   // Helper function to check if a string contains only whitespace
   isWhitespaceOnly = (text: string): boolean => {
@@ -530,6 +567,26 @@ export class Editor extends Component<{}, EditorFormState> {
             colorMap={strokesColorMap}
           />
         </div>
+        <div className="editor-buttons">
+          <button
+            className="reset-button"
+            onClick={() => {
+              this.resetProblem();
+            }}
+            title="Reset (Ctrl+R)"
+          >
+            Reset
+          </button>
+          <button
+            className="skip-button"
+            onClick={() => {
+              this.skipProblem();
+            }}
+            title="Skip (Ctrl+S)"
+          >
+            Skip
+          </button>
+        </div>
         <div className="form-container">
           <div className="form-editor">
             <div className="form monaco-editor-wrapper">
@@ -563,22 +620,6 @@ export class Editor extends Component<{}, EditorFormState> {
           <div className="form-diff">
             <div className="form diff">{this.renderDiff()}</div>
           </div>
-        </div>
-        <div className="editor-buttons">
-          <button
-            onClick={() => {
-              this.resetProblem();
-            }}
-          >
-            Reset
-          </button>
-          <button
-            onClick={() => {
-              this.skipProblem();
-            }}
-          >
-            Skip
-          </button>
         </div>
       </div>
     );
