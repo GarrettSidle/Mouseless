@@ -1,18 +1,6 @@
 import { Component } from "react";
 import "./Home.css";
 
-interface Stat {
-  value: string;
-  label: string;
-}
-
-const stats: Stat[] = [
-  { value: "10x", label: "Faster Navigation" },
-  { value: "50%", label: "Less Mouse Usage" },
-  { value: "100+", label: "Shortcuts Mastered" },
-  { value: "∞", label: "Productivity Gain" },
-];
-
 export class Home extends Component {
   render() {
     return (

@@ -25,13 +25,6 @@
   margin-bottom: 2.5rem;
 }
 
-.login-icon {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  filter: drop-shadow(0 4px 8px rgba(74, 158, 255, 0.3));
-  animation: float 3s ease-in-out infinite;
-}
-
 .login-title {
   font-size: 2rem;
   font-weight: 700;
@@ -40,13 +33,6 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-.login-subtitle {
-  font-size: 0.95rem;
-  color: rgba(239, 244, 244, 0.7);
-  margin: 0;
-  line-height: 1.5;
 }
 
 .login-form {
@@ -214,10 +200,6 @@
     font-size: 1.75rem;
   }
 
-  .login-icon {
-    font-size: 3rem;
-  }
-
   .input-group input {
     padding: 0.75rem 1rem;
   }
@@ -234,9 +216,5 @@
 
   .login-title {
     font-size: 1.5rem;
-  }
-
-  .login-subtitle {
-    font-size: 0.85rem;
   }
 }
