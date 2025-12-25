@@ -591,7 +591,7 @@ export class Editor extends Component<{}, EditorFormState> {
           <div className="form-editor">
             <div className="form monaco-editor-wrapper">
               <MonacoEditor
-                height="66vh"
+                height="60vh"
                 language="typescript"
                 theme="vs-dark"
                 value={this.state.problem.currentText}
