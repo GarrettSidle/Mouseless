@@ -1,16 +1,45 @@
 .App {
   margin-top: 78px;
   text-align: center;
-  background-color: #111518;
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+  background-attachment: fixed;
   color: #eff4f4;
+  min-height: calc(100vh - 78px);
+  position: relative;
+  overflow-x: hidden;
 }
 
-.page{
+.App::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+      circle at 20% 50%,
+      rgba(32, 149, 244, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(32, 149, 244, 0.08) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page {
   height: 100%;
+  position: relative;
+  z-index: 1;
 }
 
-body{
-  margin:0px
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 .App-logo {
@@ -39,7 +68,6 @@ body{
   color: #61dafb;
 }
 
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -49,19 +77,21 @@ body{
   }
 }
 
-
-  
-.good-background{
-  background-color:#4CAF50 ;
+.good-background {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
 }
 
-.neutral-background{
-  background-color: #505050 ;
+.neutral-background {
+  background: linear-gradient(135deg, #505050 0%, #424242 100%);
+  box-shadow: 0 4px 15px rgba(80, 80, 80, 0.2);
 }
 
-.bad-background{
-  background-color:#d15955 ;
+.bad-background {
+  background: linear-gradient(135deg, #d15955 0%, #c44e4a 100%);
+  box-shadow: 0 4px 15px rgba(209, 89, 85, 0.3);
 }
-.hidden{
+
+.hidden {
   visibility: hidden;
 }

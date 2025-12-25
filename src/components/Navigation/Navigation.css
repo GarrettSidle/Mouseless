@@ -1,5 +1,5 @@
 .navigation {
-    background-color: #2095f4;
+    background: linear-gradient(135deg, #2095f4 0%, #1a7dd4 100%);
     font-family: "Raleway", sans-serif;
     height: 78px;
     position: fixed;
@@ -7,6 +7,9 @@
     right: 0;
     left: 0;
     z-index: 1030;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .nav-account{
@@ -18,10 +21,17 @@
   }
 
   .nav-account a{
-    padding: 2%;
+    padding: 8px 16px;
     text-decoration: none;
     color: white;
     text-wrap: nowrap;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-account a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
   }
 
   .nav-account div{
@@ -43,6 +53,15 @@
   .nav-links a {
     text-decoration: none;
     color: white;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+    position: relative;
+  }
+  
+  .nav-links a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
   }
 
 
