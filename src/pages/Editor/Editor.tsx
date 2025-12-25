@@ -6,7 +6,7 @@ import ColorMap from "../../models/ColorMap";
 import Problem from "../../models/Problem";
 import * as Diff from "diff";
 import Statistics from "../../components/Statistics/Statistics";
-import MonacoEditor from "@monaco-editor/react";
+import MonacoEditor, { DiffEditor } from "@monaco-editor/react";
 
 const problems: Problem[] = [
   {
@@ -209,6 +209,7 @@ interface EditorFormState {
   completionPerc: number;
   strokes: number;
   hideStats: boolean;
+  showDiffEditor: boolean;
 }
 
 const timerColorMap: ColorMap = {
@@ -245,11 +246,14 @@ export class Editor extends Component<{}, EditorFormState> {
       completionPerc: 0,
       hideStats: true,
       strokes: 0,
+      showDiffEditor: true,
     };
     this.startTimer();
   }
 
   private timer: NodeJS.Timeout | null = null; // Timer interval reference
+  private _isMounted: boolean = true; // Track if component is mounted (start as true)
+  private diffEditorRef: any = null; // Reference to DiffEditor instance
 
   skipProblem = () => {
     var isStatsHidden = !this.state.isRunning;
@@ -259,27 +263,52 @@ export class Editor extends Component<{}, EditorFormState> {
       clearInterval(this.timer);
       this.timer = null;
     }
-    this.setState(
-      {
-        problem: problems[index],
-        elapsedSeconds: 0,
-        seconds: 0,
-        minutes: 0,
-        hideStats: true,
-        isRunning: false,
-      },
-      () => {
-        // Restart timer after state has been updated
-        this.calculateSpeed();
-        this.calculateCompletion();
-        this.startTimer();
+    // Hide and dispose DiffEditor before changing problem
+    this.setState({ showDiffEditor: false }, () => {
+      // Dispose DiffEditor after hiding
+      if (this.diffEditorRef) {
+        try {
+          this.diffEditorRef.dispose();
+        } catch (error) {
+          // Ignore disposal errors
+        }
+        this.diffEditorRef = null;
       }
-    );
+      // Small delay to ensure disposal completes, then update problem and show editor
+      setTimeout(() => {
+        this.setState(
+          {
+            problem: problems[index],
+            elapsedSeconds: 0,
+            seconds: 0,
+            minutes: 0,
+            hideStats: true,
+            isRunning: false,
+            showDiffEditor: true,
+          },
+          () => {
+            // Restart timer after state has been updated
+            this.calculateSpeed();
+            this.calculateCompletion();
+            this.startTimer();
+          }
+        );
+      }, 50);
+    });
   };
 
   completeProblem() {
+    if (!this._isMounted) return;
     this.pauseTimer();
-    this.setState({ hideStats: false });
+    // Update stats before showing completion page
+    this.calculateSpeed();
+    this.calculateCompletion();
+    // Use setTimeout to ensure state updates are applied before showing stats
+    setTimeout(() => {
+      if (this._isMounted) {
+        this.setState({ hideStats: false });
+      }
+    }, 0);
   }
 
   resetProblem = () => {
@@ -289,31 +318,56 @@ export class Editor extends Component<{}, EditorFormState> {
       clearInterval(this.timer);
       this.timer = null;
     }
-    this.setState(
-      (prevState) => ({
-        problem: {
-          ...prevState.problem,
-          currentText: this.state.problem.originalText,
-        },
-        elapsedSeconds: 0,
-        seconds: 0,
-        minutes: 0,
-        hideStats: true,
-        isRunning: false,
-      }),
-      () => {
-        // Restart timer after state has been updated
-        this.calculateSpeed();
-        this.calculateCompletion();
-        this.startTimer();
+    // Hide and dispose DiffEditor before resetting
+    this.setState({ showDiffEditor: false }, () => {
+      // Dispose DiffEditor after hiding
+      if (this.diffEditorRef) {
+        try {
+          this.diffEditorRef.dispose();
+        } catch (error) {
+          // Ignore disposal errors
+        }
+        this.diffEditorRef = null;
       }
-    );
+      // Small delay to ensure disposal completes, then reset problem and show editor
+      setTimeout(() => {
+        this.setState(
+          (prevState) => ({
+            problem: {
+              ...prevState.problem,
+              currentText: this.state.problem.originalText,
+            },
+            elapsedSeconds: 0,
+            seconds: 0,
+            minutes: 0,
+            hideStats: true,
+            isRunning: false,
+            showDiffEditor: true,
+          }),
+          () => {
+            // Restart timer after state has been updated
+            this.calculateSpeed();
+            this.calculateCompletion();
+            this.startTimer();
+          }
+        );
+      }, 50);
+    });
   };
 
   // Start the timer
   startTimer = () => {
-    if (!this.state.isRunning) {
+    if (!this.state.isRunning && this._isMounted) {
       this.timer = setInterval(() => {
+        // Check if component is still mounted before updating state
+        if (!this._isMounted) {
+          if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+          }
+          return;
+        }
+
         this.setState((prevState) => ({
           seconds: prevState.seconds + 1,
           elapsedSeconds: prevState.elapsedSeconds + 1,
@@ -405,9 +459,14 @@ export class Editor extends Component<{}, EditorFormState> {
       }
     }
 
+    // Calculate completion percentage, ensuring it never goes below 0%
+    const calculatedPerc =
+      totalChanges > 0
+        ? 100 - Math.round((charChangesRamaining / totalChanges) * 100)
+        : 100;
+
     this.setState({
-      completionPerc:
-        100 - Math.round((charChangesRamaining / totalChanges) * 100),
+      completionPerc: Math.max(0, calculatedPerc),
     });
   }
 
@@ -426,18 +485,44 @@ export class Editor extends Component<{}, EditorFormState> {
   };
 
   componentDidMount() {
+    this._isMounted = true;
+    // Calculate initial stats
+    this.calculateSpeed();
+    this.calculateCompletion();
+    // Ensure timer is running (in case it didn't start in constructor)
+    if (!this.state.isRunning && !this.timer) {
+      this.startTimer();
+    }
     // Add keyboard event listener for hotkeys
     window.addEventListener("keydown", this.handleKeyPress);
   }
 
   // Clear the timer interval when the component unmounts
   componentWillUnmount() {
+    this._isMounted = false;
+    // Clear timer
     if (this.timer) {
       clearInterval(this.timer);
+      this.timer = null;
+    }
+    // Dispose DiffEditor if it exists
+    if (this.diffEditorRef) {
+      try {
+        this.diffEditorRef.dispose();
+      } catch (error) {
+        // Ignore disposal errors as editor may already be disposed
+        console.warn("DiffEditor disposal warning:", error);
+      }
+      this.diffEditorRef = null;
     }
     // Remove keyboard event listener
     window.removeEventListener("keydown", this.handleKeyPress);
   }
+
+  // Handle DiffEditor mount
+  handleDiffEditorDidMount = (editor: any) => {
+    this.diffEditorRef = editor;
+  };
 
   handleKeyPress = (event: KeyboardEvent) => {
     // Ctrl+R for reset (or Cmd+R on Mac)
@@ -450,60 +535,6 @@ export class Editor extends Component<{}, EditorFormState> {
       event.preventDefault();
       this.skipProblem();
     }
-  };
-
-  // Helper function to check if a string contains only whitespace
-  isWhitespaceOnly = (text: string): boolean => {
-    return /^\s*$/.test(text);
-  };
-
-  // Method to generate the diff output - shows target (modifiedText) with diff highlighting
-  renderDiff = () => {
-    const { currentText, modifiedText } = this.state.problem;
-    const diffResult = Diff.diffChars(currentText, modifiedText); // Get character-level diff including spaces
-
-    return (
-      <div className="diff-content">
-        {diffResult.map((part, index) => {
-          // Determine the style based on the change type
-          // If the part is only whitespace, treat it as unchanged (don't highlight)
-          const isWhitespace = this.isWhitespaceOnly(part.value);
-          const className =
-            isWhitespace || !(part.added || part.removed)
-              ? "diff-unchanged"
-              : part.added
-              ? "diff-added"
-              : "diff-removed";
-
-          // Render each character, making spaces visible
-          // Note: newlines are preserved naturally by white-space: pre-wrap in CSS
-          const renderContent = part.value.split("").map((char, charIndex) => {
-            if (char === " ") {
-              return (
-                <span key={charIndex} className="diff-space">
-                  ·
-                </span>
-              );
-            } else if (char === "\n") {
-              return <span key={charIndex}>{"\n"}</span>;
-            } else if (char === "\t") {
-              return (
-                <span key={charIndex} className="diff-tab">
-                  →
-                </span>
-              );
-            }
-            return <span key={charIndex}>{char}</span>;
-          });
-
-          return (
-            <span key={index} className={className}>
-              {renderContent}
-            </span>
-          );
-        })}
-      </div>
-    );
   };
 
   handleChange = (value: string | undefined) => {
@@ -591,7 +622,7 @@ export class Editor extends Component<{}, EditorFormState> {
           <div className="form-editor">
             <div className="form monaco-editor-wrapper">
               <MonacoEditor
-                height="60vh"
+                height="80vh"
                 language="typescript"
                 theme="vs-dark"
                 value={this.state.problem.currentText}
@@ -618,7 +649,38 @@ export class Editor extends Component<{}, EditorFormState> {
             </div>
           </div>
           <div className="form-diff">
-            <div className="form diff">{this.renderDiff()}</div>
+            <div className="form monaco-editor-wrapper">
+              {this._isMounted && this.state.showDiffEditor && (
+                <DiffEditor
+                  key={this.state.problem.problemId}
+                  height="80vh"
+                  language="typescript"
+                  theme="vs-dark"
+                  original={this.state.problem.currentText}
+                  modified={this.state.problem.modifiedText}
+                  onMount={this.handleDiffEditorDidMount}
+                  options={{
+                    minimap: { enabled: false },
+                    scrollBeyondLastLine: false,
+                    fontSize: 18,
+                    fontFamily: "Consolas, Monaco, 'Courier New', monospace",
+                    lineHeight: 25.6,
+                    padding: { top: 24, bottom: 24 },
+                    wordWrap: "on",
+                    automaticLayout: true,
+                    readOnly: true,
+                    scrollbar: {
+                      verticalScrollbarSize: 8,
+                      horizontalScrollbarSize: 8,
+                    },
+                    renderSideBySide: true,
+                    ignoreTrimWhitespace: false,
+                    renderIndicators: true,
+                    originalEditable: false,
+                  }}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
