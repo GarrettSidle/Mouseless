@@ -522,6 +522,105 @@ export class Editor extends Component<{}, EditorFormState> {
   // Handle DiffEditor mount
   handleDiffEditorDidMount = (editor: any) => {
     this.diffEditorRef = editor;
+    this.disableEditorDiagnostics(editor);
+  };
+
+  // Disable all diagnostics/validation in Monaco Editor for all languages
+  disableAllLanguageDiagnostics = (monaco: any) => {
+    if (!monaco || !monaco.languages) return;
+
+    try {
+      // Disable TypeScript/JavaScript diagnostics (these have full support)
+      if (monaco.languages.typescript) {
+        const tsDefaults = (monaco.languages.typescript as any)
+          .typescriptDefaults;
+        const jsDefaults = (monaco.languages.typescript as any)
+          .javascriptDefaults;
+
+        if (tsDefaults) {
+          tsDefaults.setDiagnosticsOptions({
+            noSemanticValidation: true,
+            noSyntaxValidation: true,
+            noSuggestionDiagnostics: true,
+          });
+        }
+
+        if (jsDefaults) {
+          jsDefaults.setDiagnosticsOptions({
+            noSemanticValidation: true,
+            noSyntaxValidation: true,
+            noSuggestionDiagnostics: true,
+          });
+        }
+      }
+
+      // Set up a global marker filter to hide all validation markers
+      // This works for all languages, not just TypeScript/JavaScript
+      if (monaco.editor && monaco.editor.setModelMarkers) {
+        // Store original function if not already stored
+        if (!(monaco.editor as any)._originalSetModelMarkers) {
+          (monaco.editor as any)._originalSetModelMarkers =
+            monaco.editor.setModelMarkers;
+
+          // Override setModelMarkers to filter out validation markers
+          monaco.editor.setModelMarkers = function (
+            model: any,
+            owner: string,
+            markers: any[]
+          ) {
+            // Filter out all validation-related markers
+            const filteredMarkers = markers.filter((marker: any) => {
+              // Block all validation/diagnostic markers
+              const isValidationMarker =
+                owner === "typescript" ||
+                owner === "javascript" ||
+                owner === "eslint" ||
+                owner === "tslint" ||
+                (marker.source &&
+                  (marker.source.includes("validation") ||
+                    marker.source.includes("diagnostic") ||
+                    marker.source.includes("semantic") ||
+                    marker.source.includes("syntax")));
+
+              return !isValidationMarker;
+            });
+
+            // Call original function with filtered markers
+            return (monaco.editor as any)._originalSetModelMarkers.call(
+              this,
+              model,
+              owner,
+              filteredMarkers
+            );
+          };
+        }
+      }
+    } catch (error) {
+      // Ignore errors
+    }
+  };
+
+  // Disable all diagnostics/validation in Monaco Editor
+  disableEditorDiagnostics = (editor: any) => {
+    if (!editor) return;
+
+    try {
+      // Get Monaco instance
+      const monaco = (window as any).monaco;
+      if (!monaco) return;
+
+      // Disable diagnostics for all languages
+      this.disableAllLanguageDiagnostics(monaco);
+
+      // Also disable model markers (squiggly lines) for the current editor
+      const model = editor.getModel();
+      if (model && monaco.editor) {
+        monaco.editor.setModelMarkers(model, "owner", []);
+      }
+    } catch (error) {
+      // Ignore errors if Monaco API is not available
+      console.warn("Could not disable diagnostics:", error);
+    }
   };
 
   handleKeyPress = (event: KeyboardEvent) => {
@@ -627,9 +726,12 @@ export class Editor extends Component<{}, EditorFormState> {
                 theme="vs-dark"
                 value={this.state.problem.currentText}
                 onChange={this.handleChange}
+                beforeMount={(monaco: any) => {
+                  // Disable all diagnostics for all languages before editor mounts
+                  this.disableAllLanguageDiagnostics(monaco);
+                }}
                 options={{
                   minimap: { enabled: false },
-                  scrollBeyondLastLine: false,
                   fontSize: 18,
                   fontFamily: "Consolas, Monaco, 'Courier New', monospace",
                   lineHeight: 25.6,
@@ -659,9 +761,35 @@ export class Editor extends Component<{}, EditorFormState> {
                   original={this.state.problem.currentText}
                   modified={this.state.problem.modifiedText}
                   onMount={this.handleDiffEditorDidMount}
+                  beforeMount={(monaco: any) => {
+                    // Disable all diagnostics before editor mounts
+                    try {
+                      const tsDefaults =
+                        monaco.languages?.typescript?.typescriptDefaults;
+                      const jsDefaults =
+                        monaco.languages?.typescript?.javascriptDefaults;
+
+                      if (tsDefaults) {
+                        tsDefaults.setDiagnosticsOptions({
+                          noSemanticValidation: true,
+                          noSyntaxValidation: true,
+                          noSuggestionDiagnostics: true,
+                        });
+                      }
+
+                      if (jsDefaults) {
+                        jsDefaults.setDiagnosticsOptions({
+                          noSemanticValidation: true,
+                          noSyntaxValidation: true,
+                          noSuggestionDiagnostics: true,
+                        });
+                      }
+                    } catch (error) {
+                      // Ignore errors
+                    }
+                  }}
                   options={{
                     minimap: { enabled: false },
-                    scrollBeyondLastLine: false,
                     fontSize: 18,
                     fontFamily: "Consolas, Monaco, 'Courier New', monospace",
                     lineHeight: 25.6,
