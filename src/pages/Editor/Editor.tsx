@@ -6,6 +6,7 @@ import ColorMap from "../../models/ColorMap";
 import Problem from "../../models/Problem";
 import * as Diff from "diff";
 import Statistics from "../../components/Statistics/Statistics";
+import MonacoEditor from "@monaco-editor/react";
 
 const problems: Problem[] = [
   {
@@ -468,27 +469,8 @@ export class Editor extends Component<{}, EditorFormState> {
     );
   };
 
-  handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {};
-
-  applyFormatting = (prefix: string, suffix: string = "") => {
-    const textarea = document.getElementById("editor") as HTMLTextAreaElement;
-    const { selectionStart, selectionEnd } = textarea;
-    const content = this.state.problem.currentText;
-
-    const before = content.slice(0, selectionStart);
-    const selected = content.slice(selectionStart, selectionEnd);
-    const after = content.slice(selectionEnd);
-
-    this.setState((prevState) => ({
-      problem: {
-        ...prevState.problem,
-        currentText: before + prefix + selected + suffix + after,
-      },
-    }));
-  };
-
-  handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newText = event.target.value;
+  handleChange = (value: string | undefined) => {
+    const newText = value || "";
     this.setState(
       (prevState) => ({
         problem: { ...prevState.problem, currentText: newText },
@@ -550,13 +532,33 @@ export class Editor extends Component<{}, EditorFormState> {
         </div>
         <div className="form-container">
           <div className="form-editor">
-            <textarea
-              id="editor"
-              className="form"
-              value={this.state.problem.currentText}
-              onChange={this.handleChange}
-              onKeyDown={this.handleKeyDown}
-            />
+            <div className="form monaco-editor-wrapper">
+              <MonacoEditor
+                height="66vh"
+                language="typescript"
+                theme="vs-dark"
+                value={this.state.problem.currentText}
+                onChange={this.handleChange}
+                options={{
+                  minimap: { enabled: false },
+                  scrollBeyondLastLine: false,
+                  fontSize: 18,
+                  fontFamily: "Consolas, Monaco, 'Courier New', monospace",
+                  lineHeight: 25.6,
+                  padding: { top: 24, bottom: 24 },
+                  wordWrap: "on",
+                  automaticLayout: true,
+                  tabSize: 2,
+                  insertSpaces: true,
+                  renderWhitespace: "all",
+                  roundedSelection: false,
+                  scrollbar: {
+                    verticalScrollbarSize: 8,
+                    horizontalScrollbarSize: 8,
+                  },
+                }}
+              />
+            </div>
           </div>
           <div className="form-diff">
             <div className="form diff">{this.renderDiff()}</div>
