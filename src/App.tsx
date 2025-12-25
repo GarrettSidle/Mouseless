@@ -24,13 +24,15 @@ class App extends Component<{}, RouterState> {
   };
 
   componentDidMount() {
-    window.onpopstate = () => {
-      this.setState({ currentPath: window.location.pathname });
-    };
+    window.addEventListener("popstate", this.handlePopState);
   }
 
+  handlePopState = () => {
+    this.setState({ currentPath: window.location.pathname });
+  };
+
   componentWillUnmount() {
-    window.onpopstate = null;
+    window.removeEventListener("popstate", this.handlePopState);
   }
 
   render() {
