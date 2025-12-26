@@ -7,197 +7,41 @@ import Problem from "../../models/Problem";
 import * as Diff from "diff";
 import Statistics from "../../components/Statistics/Statistics";
 import MonacoEditor, { DiffEditor } from "@monaco-editor/react";
+import { getRequest, postRequest } from "../../utils/api";
+import { getSessionId } from "../../utils/cookies";
 
-const problems: Problem[] = [
-  {
-    originalText:
-      "interface TimerState {\n   time: number;\n   isRunning: boolean;\n}",
-    modifiedText: "interface TimerState {\n   time: number;\n}",
-    currentText:
-      "interface TimerState {\n   time: number;\n   isRunning: boolean;\n}",
-    problemId: "01234",
-    problemStats: {
-      timeStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      CCPMStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      keyStroksStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-    },
+// Default empty problem for initial state
+const defaultProblem: Problem = {
+  originalText: "",
+  modifiedText: "",
+  currentText: "",
+  problemId: "",
+  problemStats: {
+    timeStats: [],
+    CCPMStats: [],
+    keyStroksStats: [],
   },
-  {
-    originalText: "1",
-    modifiedText: "12",
-    currentText: "1",
-    problemId: "01234",
-    problemStats: {
-      timeStats: [1, 2, 4, 8, 8, 4, 2, 1],
-      CCPMStats: [1, 2, 4, 8, 8, 4, 2, 1],
-      keyStroksStats: [1, 2, 4, 8, 8, 4, 2, 1],
-    },
-  },
-  {
-    originalText: "1",
-    modifiedText: "2",
-    currentText: "1",
-    problemId: "01234",
-    problemStats: {
-      timeStats: [1, 2, 4, 8, 8, 4, 2, 1],
-      CCPMStats: [1, 2, 4, 8, 8, 4, 2, 1],
-      keyStroksStats: [1, 2, 4, 8, 8, 4, 2, 1],
-    },
-  },
-  {
-    originalText: "3",
-    modifiedText: "355",
-    currentText: "3",
-    problemId: "01234",
-    problemStats: {
-      timeStats: [1, 2, 4, 8, 8, 4, 2, 1],
-      CCPMStats: [1, 2, 4, 8, 8, 4, 2, 1],
-      keyStroksStats: [1, 2, 4, 8, 8, 4, 2, 1],
-    },
-  },
-  {
-    originalText:
-      "function calculateTotal(items) {\n  let sum = 0;\n  for (let i = 0; i < items.length; i++) {\n    sum += items[i].price;\n  }\n  return sum;\n}\n\nfunction applyDiscount(total) {\n  return total * 0.9;\n}",
-    modifiedText:
-      "function calculateTotal(items) {\n  let total = 0;\n  for (let i = 0; i < items.length; i++) {\n    total += items[i].price;\n  }\n  return total;\n}\n\nfunction applyDiscount(amount) {\n  return amount * 0.9;\n}",
-    currentText:
-      "function calculateTotal(items) {\n  let sum = 0;\n  for (let i = 0; i < items.length; i++) {\n    sum += items[i].price;\n  }\n  return sum;\n}\n\nfunction applyDiscount(total) {\n  return total * 0.9;\n}",
-    problemId: "01235",
-    problemStats: {
-      timeStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      CCPMStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      keyStroksStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-    },
-  },
-  {
-    originalText:
-      "class UserService {\n  constructor() {\n    this.users = [];\n    this.nextId = 1;\n  }\n\n  addUser(name, email) {\n    const user = {\n      id: this.nextId++,\n      name: name,\n      email: email\n    };\n    this.users.push(user);\n    return user;\n  }\n\n  findUserById(id) {\n    return this.users.find(u => u.id === id);\n  }\n\n  getAllUsers() {\n    return this.users;\n  }\n}",
-    modifiedText:
-      "class UserService {\n  constructor() {\n    this.users = [];\n    this.nextId = 1;\n  }\n\n  getAllUsers() {\n    return this.users;\n  }\n\n  findUserById(id) {\n    return this.users.find(u => u.id === id);\n  }\n\n  addUser(name, email) {\n    const user = {\n      id: this.nextId++,\n      name: name,\n      email: email\n    };\n    this.users.push(user);\n    return user;\n  }\n}",
-    currentText:
-      "class UserService {\n  constructor() {\n    this.users = [];\n    this.nextId = 1;\n  }\n\n  addUser(name, email) {\n    const user = {\n      id: this.nextId++,\n      name: name,\n      email: email\n    };\n    this.users.push(user);\n    return user;\n  }\n\n  findUserById(id) {\n    return this.users.find(u => u.id === id);\n  }\n\n  getAllUsers() {\n    return this.users;\n  }\n}",
-    problemId: "01236",
-    problemStats: {
-      timeStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      CCPMStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      keyStroksStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-    },
-  },
-  {
-    originalText:
-      "const data = [\n  { id: 1, name: 'Alice', age: 25 },\n  { id: 2, name: 'Bob', age: 30 },\n  { id: 3, name: 'Charlie', age: 35 }\n];\n\nfunction processData(data) {\n  const results = [];\n  for (let item of data) {\n    if (item.age > 28) {\n      results.push(item.name);\n    }\n  }\n  return results;\n}\n\nconsole.log(processData(data));",
-    modifiedText:
-      "const data = [\n  { id: 1, name: 'Alice', age: 25 },\n  { id: 2, name: 'Bob', age: 30 },\n  { id: 3, name: 'Charlie', age: 35 }\n];\n\nfunction processData(users) {\n  const filtered = [];\n  for (let user of users) {\n    if (user.age > 28) {\n      filtered.push(user.name);\n    }\n  }\n  return filtered;\n}\n\nconsole.log(processData(data));",
-    currentText:
-      "const data = [\n  { id: 1, name: 'Alice', age: 25 },\n  { id: 2, name: 'Bob', age: 30 },\n  { id: 3, name: 'Charlie', age: 35 }\n];\n\nfunction processData(data) {\n  const results = [];\n  for (let item of data) {\n    if (item.age > 28) {\n      results.push(item.name);\n    }\n  }\n  return results;\n}\n\nconsole.log(processData(data));",
-    problemId: "01237",
-    problemStats: {
-      timeStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      CCPMStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      keyStroksStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-    },
-  },
-  {
-    originalText:
-      "async function fetchUserData(userId) {\n  try {\n    const response = await fetch(`/api/users/${userId}`);\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    console.error('Error:', error);\n    return null;\n  }\n}\n\nasync function fetchUserPosts(userId) {\n  try {\n    const response = await fetch(`/api/users/${userId}/posts`);\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    console.error('Error:', error);\n    return null;\n  }\n}",
-    modifiedText:
-      "async function fetchUserData(userId) {\n  try {\n    const response = await fetch(`/api/users/${userId}`);\n    if (!response.ok) {\n      throw new Error(`HTTP error! status: ${response.status}`);\n    }\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    console.error('Error:', error);\n    return null;\n  }\n}\n\nasync function fetchUserPosts(userId) {\n  try {\n    const response = await fetch(`/api/users/${userId}/posts`);\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    console.error('Error:', error);\n    return null;\n  }\n}",
-    currentText:
-      "async function fetchUserData(userId) {\n  try {\n    const response = await fetch(`/api/users/${userId}`);\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    console.error('Error:', error);\n    return null;\n  }\n}\n\nasync function fetchUserPosts(userId) {\n  try {\n    const response = await fetch(`/api/users/${userId}/posts`);\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    console.error('Error:', error);\n    return null;\n  }\n}",
-    problemId: "01238",
-    problemStats: {
-      timeStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      CCPMStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      keyStroksStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-    },
-  },
-  {
-    originalText:
-      "function validateEmail(email) {\n  if (!email) return false;\n  const regex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return regex.test(email);\n}\n\nfunction validatePassword(password) {\n  if (!password) return false;\n  if (password.length < 8) return false;\n  return true;\n}\n\nfunction validateUser(user) {\n  return validateEmail(user.email) && validatePassword(user.password);\n}",
-    modifiedText:
-      "function validateEmail(email) {\n  if (!email) return false;\n  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return emailRegex.test(email);\n}\n\nfunction validatePassword(password) {\n  if (!password) return false;\n  if (password.length < 8) return false;\n  return true;\n}\n\nfunction validateUser(user) {\n  return validateEmail(user.email) && validatePassword(user.password);\n}",
-    currentText:
-      "function validateEmail(email) {\n  if (!email) return false;\n  const regex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return regex.test(email);\n}\n\nfunction validatePassword(password) {\n  if (!password) return false;\n  if (password.length < 8) return false;\n  return true;\n}\n\nfunction validateUser(user) {\n  return validateEmail(user.email) && validatePassword(user.password);\n}",
-    problemId: "01239",
-    problemStats: {
-      timeStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      CCPMStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-      keyStroksStats: [
-        1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24, 18, 12,
-        7, 4, 2, 1, 2, 4, 7, 12, 18, 24, 30, 34, 37, 39, 40, 39, 37, 34, 30, 24,
-        18, 12, 7, 4, 2, 1,
-      ],
-    },
-  },
-];
+};
+
+// Interface for API response
+interface ProblemResponse {
+  id: number;
+  name: string;
+  original_text: string;
+  modified_text: string;
+  problem_id: string;
+  best_time?: number | null;
+  best_key_strokes?: number | null;
+  best_ccpm?: number | null;
+}
+
+// Interface for attempt submission
+interface AttemptRequest {
+  problem_id: number;
+  time_seconds: number;
+  key_strokes: number;
+  ccpm: number;
+}
 
 interface EditorFormState {
   isRunning: boolean;
@@ -234,6 +78,9 @@ const strokesColorMap: ColorMap = {
 };
 
 export class Editor extends Component<{}, EditorFormState> {
+  private currentProblemId: number | null = null; // Store the current problem ID from backend
+  private editorKey: number = 0; // Counter to force editor remount when needed
+
   constructor(props: {}) {
     super(props);
     this.state = {
@@ -241,14 +88,13 @@ export class Editor extends Component<{}, EditorFormState> {
       seconds: 0,
       isRunning: false, // Tracks if the timer is running
       elapsedSeconds: 0,
-      problem: problems[0],
+      problem: defaultProblem,
       wordsPerMin: 0,
       completionPerc: 0,
       hideStats: true,
       strokes: 0,
       showDiffEditor: true,
     };
-    this.startTimer();
   }
 
   private timer: NodeJS.Timeout | null = null; // Timer interval reference
@@ -257,46 +103,118 @@ export class Editor extends Component<{}, EditorFormState> {
   private monacoEditorRef: any = null; // Reference to Monaco Editor instance
   private keystrokeDisposer: (() => void) | null = null; // Disposer for keystroke listener
 
-  skipProblem = () => {
-    var isStatsHidden = !this.state.isRunning;
-    var index = Math.floor(Math.random() * problems.length);
+  // Convert API response to Problem format
+  private convertApiResponseToProblem(apiResponse: ProblemResponse): Problem {
+    return {
+      originalText: apiResponse.original_text,
+      modifiedText: apiResponse.modified_text,
+      currentText: apiResponse.original_text, // Start with original text
+      problemId: apiResponse.problem_id,
+      problemStats: {
+        // TODO: These stats will need to come from backend in future
+        // For now, using empty arrays to avoid errors
+        timeStats: [],
+        CCPMStats: [],
+        keyStroksStats: [],
+      },
+    };
+  }
+
+  // Fetch a random problem from the backend
+  private fetchRandomProblem = async () => {
+    try {
+      const response = await getRequest<ProblemResponse>({
+        endpoint: "/api/problems/random",
+      });
+      this.currentProblemId = response.id;
+      const problem = this.convertApiResponseToProblem(response);
+      if (this._isMounted) {
+        // Increment key to force editor remount with new problem
+        this.editorKey += 1;
+        this.diffEditorRef = null; // Clear ref for new editor instance
+        this.setState({ problem }, () => {
+          this.calculateSpeed();
+          this.calculateCompletion();
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching problem:", error);
+      // Could show an error message to the user here
+    }
+  };
+
+  // Submit attempt to backend (only if logged in)
+  private submitAttempt = async () => {
+    const sessionId = getSessionId();
+    if (!sessionId || !this.currentProblemId) {
+      // Not logged in or no problem loaded, skip submission
+      return;
+    }
+
+    // Calculate CCPM directly to ensure we have the latest value
+    let changedCharCount = 0;
+    const diffResult = Diff.diffChars(
+      this.state.problem.currentText,
+      this.state.problem.originalText
+    );
+    for (let i = 0; i < diffResult.length; i++) {
+      if (diffResult[i].added || diffResult[i].removed) {
+        changedCharCount += diffResult[i]?.count ?? 0;
+      }
+    }
+    const ccpm =
+      this.state.elapsedSeconds > 0
+        ? Math.round(changedCharCount / (this.state.elapsedSeconds / 60))
+        : 0;
+
+    try {
+      const attemptData: AttemptRequest = {
+        problem_id: this.currentProblemId,
+        time_seconds: this.state.elapsedSeconds,
+        key_strokes: this.state.strokes,
+        ccpm: ccpm,
+      };
+
+      await postRequest<{ id: number }>({
+        endpoint: "/api/attempts",
+        data: attemptData as unknown as Record<string, unknown>,
+      });
+      console.log("Attempt submitted successfully");
+    } catch (error) {
+      console.error("Error submitting attempt:", error);
+      // Don't show error to user, just log it
+    }
+  };
+
+  skipProblem = async () => {
     // Clear any existing timer first
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
     }
-    // Hide and dispose DiffEditor before changing problem
-    this.setState({ showDiffEditor: false }, () => {
-      // Dispose DiffEditor after hiding
-      if (this.diffEditorRef) {
-        try {
-          this.diffEditorRef.dispose();
-        } catch (error) {
-          // Ignore disposal errors
+    // Clear the editor ref and hide editor to allow clean unmount
+    this.diffEditorRef = null;
+    this.setState({ showDiffEditor: false }, async () => {
+      // Wait for React to finish unmounting the editor
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Reset state and fetch new problem
+      this.setState(
+        {
+          elapsedSeconds: 0,
+          seconds: 0,
+          minutes: 0,
+          hideStats: true,
+          isRunning: false,
+          strokes: 0,
+          showDiffEditor: true,
+        },
+        async () => {
+          // Fetch new problem from API
+          await this.fetchRandomProblem();
+          // Restart timer after problem is loaded
+          this.startTimer();
         }
-        this.diffEditorRef = null;
-      }
-      // Small delay to ensure disposal completes, then update problem and show editor
-      setTimeout(() => {
-        this.setState(
-          {
-            problem: problems[index],
-            elapsedSeconds: 0,
-            seconds: 0,
-            minutes: 0,
-            hideStats: true,
-            isRunning: false,
-            showDiffEditor: true,
-            strokes: 0,
-          },
-          () => {
-            // Restart timer after state has been updated
-            this.calculateSpeed();
-            this.calculateCompletion();
-            this.startTimer();
-          }
-        );
-      }, 50);
+      );
     });
   };
 
@@ -306,6 +224,8 @@ export class Editor extends Component<{}, EditorFormState> {
     // Update stats before showing completion page
     this.calculateSpeed();
     this.calculateCompletion();
+    // Submit attempt to backend (only if logged in)
+    this.submitAttempt();
     // Use setTimeout to ensure state updates are applied before showing stats
     setTimeout(() => {
       if (this._isMounted) {
@@ -315,48 +235,35 @@ export class Editor extends Component<{}, EditorFormState> {
   }
 
   resetProblem = () => {
-    var isStatsHidden = !this.state.isRunning;
     // Clear any existing timer first
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
     }
-    // Hide and dispose DiffEditor before resetting
-    this.setState({ showDiffEditor: false }, () => {
-      // Dispose DiffEditor after hiding
-      if (this.diffEditorRef) {
-        try {
-          this.diffEditorRef.dispose();
-        } catch (error) {
-          // Ignore disposal errors
-        }
-        this.diffEditorRef = null;
+    // Clear the editor ref - React will handle remounting via key prop
+    this.diffEditorRef = null;
+    // Reset problem state
+    // The key prop on DiffEditor will ensure React remounts it properly
+    this.setState(
+      (prevState) => ({
+        problem: {
+          ...prevState.problem,
+          currentText: this.state.problem.originalText,
+        },
+        elapsedSeconds: 0,
+        seconds: 0,
+        minutes: 0,
+        hideStats: true,
+        isRunning: false,
+        strokes: 0,
+      }),
+      () => {
+        // Restart timer after state has been updated
+        this.calculateSpeed();
+        this.calculateCompletion();
+        this.startTimer();
       }
-      // Small delay to ensure disposal completes, then reset problem and show editor
-      setTimeout(() => {
-        this.setState(
-          (prevState) => ({
-            problem: {
-              ...prevState.problem,
-              currentText: this.state.problem.originalText,
-            },
-            elapsedSeconds: 0,
-            seconds: 0,
-            minutes: 0,
-            hideStats: true,
-            isRunning: false,
-            showDiffEditor: true,
-            strokes: 0,
-          }),
-          () => {
-            // Restart timer after state has been updated
-            this.calculateSpeed();
-            this.calculateCompletion();
-            this.startTimer();
-          }
-        );
-      }, 50);
-    });
+    );
   };
 
   // Start the timer
@@ -490,13 +397,13 @@ export class Editor extends Component<{}, EditorFormState> {
 
   componentDidMount() {
     this._isMounted = true;
-    // Calculate initial stats
-    this.calculateSpeed();
-    this.calculateCompletion();
-    // Ensure timer is running (in case it didn't start in constructor)
-    if (!this.state.isRunning && !this.timer) {
-      this.startTimer();
-    }
+    // Fetch initial problem from backend
+    this.fetchRandomProblem().then(() => {
+      // Start timer after problem is loaded
+      if (!this.state.isRunning && !this.timer) {
+        this.startTimer();
+      }
+    });
     // Add keyboard event listener for hotkeys
     window.addEventListener("keydown", this.handleKeyPress);
   }
@@ -827,7 +734,7 @@ export class Editor extends Component<{}, EditorFormState> {
             <div className="form monaco-editor-wrapper">
               {this._isMounted && this.state.showDiffEditor && (
                 <DiffEditor
-                  key={this.state.problem.problemId}
+                  key={`editor-${this.editorKey}-${this.state.problem.problemId}`}
                   height="80vh"
                   language="typescript"
                   theme="vs-dark"
