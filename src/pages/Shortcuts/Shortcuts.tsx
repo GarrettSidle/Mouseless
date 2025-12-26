@@ -568,7 +568,11 @@ export class Shortcuts extends Component<{}, ShortcutsState> {
             <div key={category} className="shortcuts-category">
               <h2
                 className="category-title"
-                style={{ "--category-color": this.getCategoryColor(category) } as React.CSSProperties}
+                style={
+                  {
+                    "--category-color": this.getCategoryColor(category),
+                  } as React.CSSProperties
+                }
               >
                 {category}
               </h2>
