@@ -1,0 +1,146 @@
+[
+  {
+    "id": "goto-line",
+    "name": "Go to Line",
+    "keys": ["Ctrl", "G"],
+    "description": "Jump to a specific line number",
+    "category": "Navigation",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "find",
+    "name": "Find",
+    "keys": ["Ctrl", "F"],
+    "description": "Search for text in the current file",
+    "category": "Search",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "replace",
+    "name": "Find and Replace",
+    "keys": ["Ctrl", "H"],
+    "description": "Find and replace text in the current file",
+    "category": "Search",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "multicursor",
+    "name": "Add Cursor",
+    "keys": ["Alt", "Click"],
+    "description": "Add multiple cursors (Alt+Click or Ctrl+Alt+Up/Down)",
+    "category": "Editing",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "select-line",
+    "name": "Select Line",
+    "keys": ["Ctrl", "L"],
+    "description": "Select the entire current line",
+    "category": "Selection",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "duplicate-line",
+    "name": "Duplicate Line",
+    "keys": ["Shift", "Alt", "Down"],
+    "description": "Duplicate the current line below",
+    "category": "Editing",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "move-line",
+    "name": "Move Line",
+    "keys": ["Alt", "Up/Down"],
+    "description": "Move the current line up or down",
+    "category": "Editing",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "delete-line",
+    "name": "Delete Line",
+    "keys": ["Ctrl", "Shift", "K"],
+    "description": "Delete the entire current line",
+    "category": "Editing",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "comment",
+    "name": "Toggle Comment",
+    "keys": ["Ctrl", "/"],
+    "description": "Comment or uncomment the current line/selection",
+    "category": "Editing",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "format",
+    "name": "Format Document",
+    "keys": ["Shift", "Alt", "F"],
+    "description": "Format the entire document",
+    "category": "Formatting",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "goto-symbol",
+    "name": "Go to Symbol",
+    "keys": ["Ctrl", "Shift", "O"],
+    "description": "Navigate to a symbol (function, class, etc.) in the file",
+    "category": "Navigation",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "rename",
+    "name": "Rename Symbol",
+    "keys": ["F2"],
+    "description": "Rename a symbol and all its references",
+    "category": "Refactoring",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "indent",
+    "name": "Indent/Outdent",
+    "keys": ["Tab", "/", "Shift+Tab"],
+    "description": "Indent or outdent the current line/selection",
+    "category": "Formatting",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "select-all-occurrences",
+    "name": "Select All Occurrences",
+    "keys": ["Ctrl", "Shift", "L"],
+    "description": "Select all occurrences of the current word",
+    "category": "Selection",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "toggle-word-wrap",
+    "name": "Toggle Word Wrap",
+    "keys": ["Alt", "Z"],
+    "description": "Toggle word wrap on/off",
+    "category": "View",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "split-editor",
+    "name": "Split Editor",
+    "keys": ["Ctrl", "\\"],
+    "description": "Split the editor into multiple panes",
+    "category": "View",
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  }
+]
