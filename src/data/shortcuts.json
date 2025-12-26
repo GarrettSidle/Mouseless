@@ -5,6 +5,7 @@
     "keys": ["Ctrl", "G"],
     "description": "Jump to a specific line number",
     "category": "Navigation",
+    "hasDemo": false,
     "still": "/Shortcut_demos/temp_still.png",
     "gif": "/Shortcut_demos/temp.gif"
   },
@@ -14,6 +15,7 @@
     "keys": ["Ctrl", "F"],
     "description": "Search for text in the current file",
     "category": "Search",
+    "hasDemo": false,
     "still": "/Shortcut_demos/temp_still.png",
     "gif": "/Shortcut_demos/temp.gif"
   },
@@ -23,6 +25,7 @@
     "keys": ["Ctrl", "H"],
     "description": "Find and replace text in the current file",
     "category": "Search",
+    "hasDemo": false,
     "still": "/Shortcut_demos/temp_still.png",
     "gif": "/Shortcut_demos/temp.gif"
   },
@@ -32,6 +35,7 @@
     "keys": ["Alt", "Click"],
     "description": "Add multiple cursors (Alt+Click or Ctrl+Alt+Up/Down)",
     "category": "Editing",
+    "hasDemo": false,
     "still": "/Shortcut_demos/temp_still.png",
     "gif": "/Shortcut_demos/temp.gif"
   },
@@ -41,8 +45,27 @@
     "keys": ["Ctrl", "L"],
     "description": "Select the entire current line",
     "category": "Selection",
+    "hasDemo": true,
     "still": "/Shortcut_demos/temp_still.png",
-    "gif": "/Shortcut_demos/temp.gif"
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function test() {\n  const value = 42;\n  return value;\n}",
+    "animationSteps": [
+      {
+        "code": "function test() {\n  const value = 42;\n  return value;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 10 },
+        "delay": 300
+      },
+      {
+        "code": "function test() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 2,
+          "startColumn": 1,
+          "endLineNumber": 2,
+          "endColumn": 20
+        },
+        "delay": 600
+      }
+    ]
   },
   {
     "id": "duplicate-line",
@@ -50,8 +73,22 @@
     "keys": ["Shift", "Alt", "Down"],
     "description": "Duplicate the current line below",
     "category": "Editing",
+    "hasDemo": true,
     "still": "/Shortcut_demos/temp_still.png",
-    "gif": "/Shortcut_demos/temp.gif"
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function example() {\n  const x = 10;\n  return x;\n}",
+    "animationSteps": [
+      {
+        "code": "function example() {\n  const x = 10;\n  return x;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 1 },
+        "delay": 300
+      },
+      {
+        "code": "function example() {\n  const x = 10;\n  const x = 10;\n  return x;\n}",
+        "cursorPosition": { "lineNumber": 3, "column": 1 },
+        "delay": 900
+      }
+    ]
   },
   {
     "id": "move-line",
@@ -59,8 +96,27 @@
     "keys": ["Alt", "Up/Down"],
     "description": "Move the current line up or down",
     "category": "Editing",
+    "hasDemo": true,
     "still": "/Shortcut_demos/temp_still.png",
-    "gif": "/Shortcut_demos/temp.gif"
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "const a = 1;\nconst b = 2;\nconst c = 3;",
+    "animationSteps": [
+      {
+        "code": "const a = 1;\nconst b = 2;\nconst c = 3;",
+        "cursorPosition": { "lineNumber": 1, "column": 1 },
+        "delay": 300
+      },
+      {
+        "code": "const b = 2;\nconst a = 1;\nconst c = 3;",
+        "cursorPosition": { "lineNumber": 2, "column": 1 },
+        "delay": 900
+      },
+      {
+        "code": "const b = 2;\nconst c = 3;\nconst a = 1;",
+        "cursorPosition": { "lineNumber": 3, "column": 1 },
+        "delay": 1200
+      }
+    ]
   },
   {
     "id": "delete-line",
@@ -68,8 +124,22 @@
     "keys": ["Ctrl", "Shift", "K"],
     "description": "Delete the entire current line",
     "category": "Editing",
+    "hasDemo": true,
     "still": "/Shortcut_demos/temp_still.png",
-    "gif": "/Shortcut_demos/temp.gif"
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function test() {\n  const temp = 5;\n  const result = 10;\n  return result;\n}",
+    "animationSteps": [
+      {
+        "code": "function test() {\n  const temp = 5;\n  const result = 10;\n  return result;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 1 },
+        "delay": 300
+      },
+      {
+        "code": "function test() {\n  const result = 10;\n  return result;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 1 },
+        "delay": 900
+      }
+    ]
   },
   {
     "id": "comment",
@@ -77,8 +147,37 @@
     "keys": ["Ctrl", "/"],
     "description": "Comment or uncomment the current line/selection",
     "category": "Editing",
+    "hasDemo": true,
     "still": "/Shortcut_demos/temp_still.png",
-    "gif": "/Shortcut_demos/temp.gif"
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function example() {\n  const x = 1;\n  const y = 2;\n  return x + y;\n}",
+    "animationSteps": [
+      {
+        "code": "function example() {\n  const x = 1;\n  const y = 2;\n  return x + y;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 1 },
+        "delay": 300
+      },
+      {
+        "code": "function example() {\n  // const x = 1;\n  const y = 2;\n  return x + y;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 1 },
+        "delay": 750
+      },
+      {
+        "code": "function example() {\n  // const x = 1;\n  // const y = 2;\n  return x + y;\n}",
+        "cursorPosition": { "lineNumber": 3, "column": 1 },
+        "delay": 900
+      },
+      {
+        "code": "function example() {\n  const x = 1;\n  // const y = 2;\n  return x + y;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 1 },
+        "delay": 1050
+      },
+      {
+        "code": "function example() {\n  const x = 1;\n  const y = 2;\n  return x + y;\n}",
+        "cursorPosition": { "lineNumber": 3, "column": 1 },
+        "delay": 1200
+      }
+    ]
   },
   {
     "id": "format",
@@ -86,8 +185,22 @@
     "keys": ["Shift", "Alt", "F"],
     "description": "Format the entire document",
     "category": "Formatting",
+    "hasDemo": true,
     "still": "/Shortcut_demos/temp_still.png",
-    "gif": "/Shortcut_demos/temp.gif"
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function test(){const x=1;const y=2;return x+y;}",
+    "animationSteps": [
+      {
+        "code": "function test(){const x=1;const y=2;return x+y;}",
+        "cursorPosition": { "lineNumber": 1, "column": 1 },
+        "delay": 300
+      },
+      {
+        "code": "function test() {\n  const x = 1;\n  const y = 2;\n  return x + y;\n}",
+        "cursorPosition": { "lineNumber": 1, "column": 1 },
+        "delay": 900
+      }
+    ]
   },
   {
     "id": "goto-symbol",
@@ -95,6 +208,7 @@
     "keys": ["Ctrl", "Shift", "O"],
     "description": "Navigate to a symbol (function, class, etc.) in the file",
     "category": "Navigation",
+    "hasDemo": false,
     "still": "/Shortcut_demos/temp_still.png",
     "gif": "/Shortcut_demos/temp.gif"
   },
@@ -104,17 +218,55 @@
     "keys": ["F2"],
     "description": "Rename a symbol and all its references",
     "category": "Refactoring",
+    "hasDemo": false,
     "still": "/Shortcut_demos/temp_still.png",
     "gif": "/Shortcut_demos/temp.gif"
   },
   {
     "id": "indent",
-    "name": "Indent/Outdent",
-    "keys": ["Tab", "/", "Shift+Tab"],
-    "description": "Indent or outdent the current line/selection",
+    "name": "Indent",
+    "keys": ["Tab"],
+    "description": "Indent the current line/selection",
     "category": "Formatting",
+    "hasDemo": true,
     "still": "/Shortcut_demos/temp_still.png",
-    "gif": "/Shortcut_demos/temp.gif"
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function test() {\nconst x = 1;\nreturn x;\n}",
+    "animationSteps": [
+      {
+        "code": "function test() {\nconst x = 1;\nreturn x;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 1 },
+        "delay": 300
+      },
+      {
+        "code": "function test() {\n  const x = 1;\n  return x;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 3 },
+        "delay": 900
+      }
+    ]
+  },
+  {
+    "id": "outdent",
+    "name": "Outdent",
+    "keys": ["Shift", "Tab"],
+    "description": "Outdent the current line/selection",
+    "category": "Formatting",
+    "hasDemo": true,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function test() {\n  const x = 1;\n  return x;\n}",
+    "animationSteps": [
+      {
+        "code": "function test() {\n  const x = 1;\n  return x;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 3 },
+        "delay": 300
+      },
+      {
+        "code": "function test() {\nconst x = 1;\nreturn x;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 1 },
+        "delay": 900
+      }
+    ]
   },
   {
     "id": "select-all-occurrences",
@@ -122,8 +274,37 @@
     "keys": ["Ctrl", "Shift", "L"],
     "description": "Select all occurrences of the current word",
     "category": "Selection",
+    "hasDemo": true,
     "still": "/Shortcut_demos/temp_still.png",
-    "gif": "/Shortcut_demos/temp.gif"
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "const value = 1;\nconst value = 2;\nconst value = 3;",
+    "animationSteps": [
+      {
+        "code": "const value = 1;\nconst value = 2;\nconst value = 3;",
+        "cursorPosition": { "lineNumber": 1, "column": 7 },
+        "delay": 300
+      },
+      {
+        "code": "const value = 1;\nconst value = 2;\nconst value = 3;",
+        "selection": {
+          "startLineNumber": 1,
+          "startColumn": 7,
+          "endLineNumber": 1,
+          "endColumn": 12
+        },
+        "delay": 600
+      },
+      {
+        "code": "const value = 1;\nconst value = 2;\nconst value = 3;",
+        "selection": {
+          "startLineNumber": 1,
+          "startColumn": 1,
+          "endLineNumber": 1,
+          "endColumn": 1
+        },
+        "delay": 900
+      }
+    ]
   },
   {
     "id": "toggle-word-wrap",
@@ -131,6 +312,7 @@
     "keys": ["Alt", "Z"],
     "description": "Toggle word wrap on/off",
     "category": "View",
+    "hasDemo": false,
     "still": "/Shortcut_demos/temp_still.png",
     "gif": "/Shortcut_demos/temp.gif"
   },
@@ -140,6 +322,422 @@
     "keys": ["Ctrl", "\\"],
     "description": "Split the editor into multiple panes",
     "category": "View",
+    "hasDemo": false,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "undo",
+    "name": "Undo",
+    "keys": ["Ctrl", "Z"],
+    "description": "Undo the last action",
+    "category": "Editing",
+    "hasDemo": false,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "redo",
+    "name": "Redo",
+    "keys": ["Ctrl", "Y"],
+    "description": "Redo the last undone action",
+    "category": "Editing",
+    "hasDemo": false,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "cut",
+    "name": "Cut",
+    "keys": ["Ctrl", "X"],
+    "description": "Delete the selected text and copy it to the clipboard",
+    "category": "Editing",
+    "hasDemo": true,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function test() {\n  const value = 42;\n  return value;\n}",
+    "animationSteps": [
+      {
+        "code": "function test() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 2,
+          "startColumn": 3,
+          "endLineNumber": 2,
+          "endColumn": 15
+        },
+        "delay": 300
+      },
+      {
+        "code": "function test() {\n  \n  return value;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 3 },
+        "delay": 900
+      }
+    ]
+  },
+  {
+    "id": "select-all",
+    "name": "Select All",
+    "keys": ["Ctrl", "A"],
+    "description": "Select all text in the editor",
+    "category": "Selection",
+    "hasDemo": true,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function test() {\n  const x = 1;\n  return x;\n}",
+    "animationSteps": [
+      {
+        "code": "function test() {\n  const x = 1;\n  return x;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 10 },
+        "delay": 300
+      },
+      {
+        "code": "function test() {\n  const x = 1;\n  return x;\n}",
+        "selection": {
+          "startLineNumber": 1,
+          "startColumn": 1,
+          "endLineNumber": 4,
+          "endColumn": 11
+        },
+        "delay": 600
+      }
+    ]
+  },
+  {
+    "id": "line-start",
+    "name": "Line Start",
+    "keys": ["Home"],
+    "description": "Move cursor to the start of the line",
+    "category": "Navigation",
+    "hasDemo": false,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "line-end",
+    "name": "Line End",
+    "keys": ["End"],
+    "description": "Move cursor to the end of the line",
+    "category": "Navigation",
+    "hasDemo": false,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "move-by-word",
+    "name": "Move by Word",
+    "keys": ["Ctrl", "←/→"],
+    "description": "Move cursor by word (left or right)",
+    "category": "Navigation",
+    "hasDemo": false,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "select-by-word",
+    "name": "Select by Word",
+    "keys": ["Ctrl", "Shift", "←/→"],
+    "description": "Select text by word (left or right)",
+    "category": "Selection",
+    "hasDemo": true,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "const exampleValue = 42;",
+    "animationSteps": [
+      {
+        "code": "const exampleValue = 42;",
+        "cursorPosition": { "lineNumber": 1, "column": 10 },
+        "delay": 300
+      },
+      {
+        "code": "const exampleValue = 42;",
+        "selection": {
+          "startLineNumber": 1,
+          "startColumn": 7,
+          "endLineNumber": 1,
+          "endColumn": 19
+        },
+        "delay": 600
+      },
+      {
+        "code": "const exampleValue = 42;",
+        "selection": {
+          "startLineNumber": 1,
+          "startColumn": 1,
+          "endLineNumber": 1,
+          "endColumn": 19
+        },
+        "delay": 900
+      }
+    ]
+  },
+  {
+    "id": "delete-word",
+    "name": "Delete Word",
+    "keys": ["Ctrl", "Backspace"],
+    "description": "Delete word before or after cursor",
+    "category": "Editing",
+    "hasDemo": true,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "const exampleValue = 42;",
+    "animationSteps": [
+      {
+        "code": "const exampleValue = 42;",
+        "cursorPosition": { "lineNumber": 1, "column": 10 },
+        "delay": 300
+      },
+      {
+        "code": "const = 42;",
+        "cursorPosition": { "lineNumber": 1, "column": 6 },
+        "delay": 600
+      }
+    ]
+  },
+  {
+    "id": "top-of-file",
+    "name": "Top of File",
+    "keys": ["Ctrl", "Home"],
+    "description": "Move cursor to the top of the file",
+    "category": "Navigation",
+    "hasDemo": true,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function first() {\n  return 1;\n}\n\nfunction second() {\n  return 2;\n}\n\nfunction third() {\n  return 3;\n}",
+    "animationSteps": [
+      {
+        "code": "function first() {\n  return 1;\n}\n\nfunction second() {\n  return 2;\n}\n\nfunction third() {\n  return 3;\n}",
+        "cursorPosition": { "lineNumber": 9, "column": 1 },
+        "delay": 300
+      },
+      {
+        "code": "function first() {\n  return 1;\n}\n\nfunction second() {\n  return 2;\n}\n\nfunction third() {\n  return 3;\n}",
+        "cursorPosition": { "lineNumber": 1, "column": 1 },
+        "delay": 600
+      }
+    ]
+  },
+  {
+    "id": "bottom-of-file",
+    "name": "Bottom of File",
+    "keys": ["Ctrl", "End"],
+    "description": "Move cursor to the bottom of the file",
+    "category": "Navigation",
+    "hasDemo": true,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function first() {\n  return 1;\n}\n\nfunction second() {\n  return 2;\n}\n\nfunction third() {\n  return 3;\n}",
+    "animationSteps": [
+      {
+        "code": "function first() {\n  return 1;\n}\n\nfunction second() {\n  return 2;\n}\n\nfunction third() {\n  return 3;\n}",
+        "cursorPosition": { "lineNumber": 1, "column": 1 },
+        "delay": 300
+      },
+      {
+        "code": "function first() {\n  return 1;\n}\n\nfunction second() {\n  return 2;\n}\n\nfunction third() {\n  return 3;\n}",
+        "cursorPosition": { "lineNumber": 9, "column": 1 },
+        "delay": 600
+      }
+    ]
+  },
+  {
+    "id": "insert-line-below",
+    "name": "Insert Line Below",
+    "keys": ["Ctrl", "Enter"],
+    "description": "Insert a new line below the current line",
+    "category": "Editing",
+    "hasDemo": true,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function test() {\n  const x = 1;\n  return x;\n}",
+    "animationSteps": [
+      {
+        "code": "function test() {\n  const x = 1;\n  return x;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 10 },
+        "delay": 300
+      },
+      {
+        "code": "function test() {\n  const x = 1;\n  \n  return x;\n}",
+        "cursorPosition": { "lineNumber": 3, "column": 1 },
+        "delay": 600
+      }
+    ]
+  },
+  {
+    "id": "insert-line-above",
+    "name": "Insert Line Above",
+    "keys": ["Ctrl", "Shift", "Enter"],
+    "description": "Insert a new line above the current line",
+    "category": "Editing",
+    "hasDemo": true,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function test() {\n  const x = 1;\n  return x;\n}",
+    "animationSteps": [
+      {
+        "code": "function test() {\n  const x = 1;\n  return x;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 10 },
+        "delay": 300
+      },
+      {
+        "code": "function test() {\n  \n  const x = 1;\n  return x;\n}",
+        "cursorPosition": { "lineNumber": 2, "column": 1 },
+        "delay": 600
+      }
+    ]
+  },
+  {
+    "id": "expand-selection",
+    "name": "Expand Selection",
+    "keys": ["Shift", "Alt", "→"],
+    "description": "Expand selection to include more context",
+    "category": "Selection",
+    "hasDemo": true,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function example() {\n  const value = 42;\n  return value;\n}",
+    "animationSteps": [
+      {
+        "code": "function example() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 2,
+          "startColumn": 9,
+          "endLineNumber": 2,
+          "endColumn": 14
+        },
+        "delay": 300
+      },
+      {
+        "code": "function example() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 2,
+          "startColumn": 3,
+          "endLineNumber": 2,
+          "endColumn": 14
+        },
+        "delay": 600
+      },
+      {
+        "code": "function example() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 2,
+          "startColumn": 1,
+          "endLineNumber": 2,
+          "endColumn": 20
+        },
+        "delay": 900
+      },
+      {
+        "code": "function example() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 1,
+          "startColumn": 20,
+          "endLineNumber": 4,
+          "endColumn": 2
+        },
+        "delay": 1200
+      },
+      {
+        "code": "function example() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 1,
+          "startColumn": 1,
+          "endLineNumber": 4,
+          "endColumn": 2
+        },
+        "delay": 1500
+      }
+    ]
+  },
+  {
+    "id": "shrink-selection",
+    "name": "Shrink Selection",
+    "keys": ["Shift", "Alt", "←"],
+    "description": "Shrink selection to reduce context",
+    "category": "Selection",
+    "hasDemo": true,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif",
+    "initialCode": "function example() {\n  const value = 42;\n  return value;\n}",
+    "animationSteps": [
+      {
+        "code": "function example() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 1,
+          "startColumn": 1,
+          "endLineNumber": 4,
+          "endColumn": 2
+        },
+        "delay": 300
+      },
+      {
+        "code": "function example() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 1,
+          "startColumn": 20,
+          "endLineNumber": 4,
+          "endColumn": 2
+        },
+        "delay": 600
+      },
+      {
+        "code": "function example() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 2,
+          "startColumn": 1,
+          "endLineNumber": 2,
+          "endColumn": 20
+        },
+        "delay": 900
+      },
+      {
+        "code": "function example() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 2,
+          "startColumn": 3,
+          "endLineNumber": 2,
+          "endColumn": 14
+        },
+        "delay": 1200
+      },
+      {
+        "code": "function example() {\n  const value = 42;\n  return value;\n}",
+        "selection": {
+          "startLineNumber": 2,
+          "startColumn": 9,
+          "endLineNumber": 2,
+          "endColumn": 14
+        },
+        "delay": 1500
+      }
+    ]
+  },
+  {
+    "id": "go-to-file",
+    "name": "Go to File",
+    "keys": ["Ctrl", "P"],
+    "description": "Quickly open a file by name",
+    "category": "Navigation",
+    "hasDemo": false,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "go-to-definition",
+    "name": "Go to Definition",
+    "keys": ["F12"],
+    "description": "Navigate to the definition of a symbol",
+    "category": "Navigation",
+    "hasDemo": false,
+    "still": "/Shortcut_demos/temp_still.png",
+    "gif": "/Shortcut_demos/temp.gif"
+  },
+  {
+    "id": "peek-definition",
+    "name": "Peek Definition",
+    "keys": ["Alt", "F12"],
+    "description": "Peek at the definition without navigating away",
+    "category": "Navigation",
+    "hasDemo": false,
     "still": "/Shortcut_demos/temp_still.png",
     "gif": "/Shortcut_demos/temp.gif"
   }
