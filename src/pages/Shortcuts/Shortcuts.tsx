@@ -39,6 +39,8 @@ export class Shortcuts extends Component<{}, ShortcutsState> {
   private animationTimeouts: NodeJS.Timeout[] = [];
   private editorRefs: { [key: string]: any } = {};
   private resetTimeouts: { [key: string]: NodeJS.Timeout } = {};
+  private videoRefs: { [key: string]: HTMLVideoElement | null } = {};
+  private videoLoopTimeouts: { [key: string]: NodeJS.Timeout } = {};
 
   constructor(props: {}) {
     super(props);
@@ -55,6 +57,16 @@ export class Shortcuts extends Component<{}, ShortcutsState> {
     Object.values(this.resetTimeouts).forEach((timeout) =>
       clearTimeout(timeout)
     );
+    Object.values(this.videoLoopTimeouts).forEach((timeout) =>
+      clearTimeout(timeout)
+    );
+    // Pause all videos
+    Object.values(this.videoRefs).forEach((video) => {
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+      }
+    });
   }
 
   handleMouseEnter = (shortcut: Shortcut) => {
@@ -63,12 +75,20 @@ export class Shortcuts extends Component<{}, ShortcutsState> {
     // If shortcut has a demo, start it
     if (shortcut.hasDemo && shortcut.animationSteps) {
       this.startAnimation(shortcut);
+    } else {
+      // If it's a video, start playing it
+      this.playVideo(shortcut.id);
     }
   };
 
   handleMouseLeave = () => {
     this.setState({ hoveredShortcut: null });
     this.stopAnimation();
+
+    // Stop all videos
+    Object.keys(this.videoRefs).forEach((shortcutId) => {
+      this.stopVideo(shortcutId);
+    });
 
     // Reset all editors to their initial state
     const shortcuts = shortcutsData as Shortcut[];
@@ -235,6 +255,71 @@ export class Shortcuts extends Component<{}, ShortcutsState> {
     return colors[category] || "#94A3B8";
   };
 
+  getVideoPath = (shortcutId: string): string => {
+    // Map shortcut IDs to MP4 filenames
+    const videoMap: { [key: string]: string } = {
+      "goto-line": "GoToLine.mp4",
+      find: "Find.mp4",
+      replace: "Replace.mp4",
+      multicursor: "AddCursor.mp4",
+      "goto-symbol": "GoToSymbol.mp4",
+      undo: "Undo.mp4",
+      redo: "Redo.mp4",
+      "line-start": "LineStart.mp4",
+      "line-end": "LineEnd.mp4",
+      "move-by-word": "MoveByWord.mp4",
+      "top-of-file": "TopOfFile.mp4",
+      "bottom-of-file": "BottomOfFile.mp4",
+      "go-to-definition": "GoToDefinition.mp4",
+      "peek-definition": "PeekDefinition.mp4",
+      rename: "RenameSymbol.mp4",
+    };
+    const filename = videoMap[shortcutId] || "temp.gif";
+    return `/Shortcut_demos/${filename}`;
+  };
+
+  handleVideoRef = (shortcutId: string, video: HTMLVideoElement | null) => {
+    this.videoRefs[shortcutId] = video;
+    if (video) {
+      // Set up event listener for when video ends
+      video.addEventListener("ended", () => {
+        if (this.state.hoveredShortcut === shortcutId) {
+          // Wait 0.25 seconds then play again
+          const timeout = setTimeout(() => {
+            if (this.state.hoveredShortcut === shortcutId && video) {
+              video.currentTime = 0;
+              video.play();
+            }
+          }, 250);
+          this.videoLoopTimeouts[shortcutId] = timeout;
+        }
+      });
+    }
+  };
+
+  playVideo = (shortcutId: string) => {
+    const video = this.videoRefs[shortcutId];
+    if (video) {
+      video.currentTime = 0;
+      video.play().catch(() => {
+        // Ignore play errors
+      });
+    }
+  };
+
+  stopVideo = (shortcutId: string) => {
+    const video = this.videoRefs[shortcutId];
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+    // Clear any pending loop timeout
+    if (this.videoLoopTimeouts[shortcutId]) {
+      clearTimeout(this.videoLoopTimeouts[shortcutId]);
+      delete this.videoLoopTimeouts[shortcutId];
+    }
+  };
+
   render() {
     const shortcuts = shortcutsData as Shortcut[];
     const categories = Array.from(new Set(shortcuts.map((s) => s.category)));
@@ -347,14 +432,15 @@ export class Shortcuts extends Component<{}, ShortcutsState> {
                           </div>
                         ) : (
                           <div className="gif-container">
-                            <img
-                              src={
-                                this.state.hoveredShortcut === shortcut.id
-                                  ? shortcut.gif
-                                  : shortcut.still
+                            <video
+                              ref={(video) =>
+                                this.handleVideoRef(shortcut.id, video)
                               }
-                              alt={`${shortcut.name} demo`}
-                              className="shortcut-gif"
+                              src={this.getVideoPath(shortcut.id)}
+                              className="shortcut-video"
+                              preload="metadata"
+                              muted
+                              playsInline
                             />
                           </div>
                         )}
