@@ -197,12 +197,15 @@ export interface EditorFormState {
   minutes: number;
   seconds: number;
   elapsedSeconds: number;
-  problem: Problem;
+  problem: Problem | null;
   wordsPerMin: number;
   completionPerc: number;
   strokes: number;
   hideStats: boolean;
   showDiffEditor: boolean;
+  isLoading: boolean;
+  error: string | null;
+  skipCooldown: boolean;
 }
 
 export const timerColorMap: ColorMap = {

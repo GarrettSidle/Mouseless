@@ -10,11 +10,18 @@ export class DiffEditorManager {
    */
   handleDiffEditorDidMount = (editor: any) => {
     this.diffEditorRef = editor;
-    this.disableEditorDiagnostics(editor);
+    // Use setTimeout to ensure the editor is fully initialized before disabling diagnostics
+    setTimeout(() => {
+      if (this.diffEditorRef === editor) {
+        this.disableEditorDiagnostics(editor);
+      }
+    }, 100);
   };
 
   /**
    * Disable all diagnostics/validation in Monaco Editor
+   * Note: Diagnostics are already disabled at the language level in beforeMount,
+   * so we don't need to set model markers here. This avoids errors with model access.
    */
   private disableEditorDiagnostics = (editor: any) => {
     if (!editor) return;
@@ -25,16 +32,16 @@ export class DiffEditorManager {
       if (!monaco) return;
 
       // Disable diagnostics for all languages
+      // This is the main way to disable diagnostics and is already called in beforeMount
+      // We call it here again as a safety measure in case the editor was created before beforeMount ran
       this.disableAllLanguageDiagnostics(monaco);
 
-      // Also disable model markers (squiggly lines) for the current editor
-      const model = editor.getModel();
-      if (model && monaco.editor) {
-        monaco.editor.setModelMarkers(model, "owner", []);
-      }
+      // Note: We intentionally don't call setModelMarkers here because:
+      // 1. Diagnostics are already disabled at the language level
+      // 2. Accessing models on DiffEditor can cause errors if models aren't fully initialized
+      // 3. The beforeMount hook already handles disabling diagnostics globally
     } catch (error) {
-      // Ignore errors if Monaco API is not available
-      console.warn("Could not disable diagnostics:", error);
+      // Silently ignore errors - diagnostics disabling is best-effort
     }
   };
 
@@ -86,11 +93,15 @@ export class DiffEditorManager {
   dispose = () => {
     if (this.diffEditorRef) {
       try {
-        this.diffEditorRef.dispose();
+        // Check if editor still exists and has dispose method
+        if (this.diffEditorRef && typeof this.diffEditorRef.dispose === "function") {
+          this.diffEditorRef.dispose();
+        }
       } catch (error) {
-        // Ignore disposal errors
+        // Ignore disposal errors - editor may already be disposed
+      } finally {
+        this.diffEditorRef = null;
       }
-      this.diffEditorRef = null;
     }
   };
 

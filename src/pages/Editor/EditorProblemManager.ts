@@ -1,17 +1,16 @@
 import Problem from "../../models/Problem";
-import { problems } from "./EditorData";
 import { isProblemCompleted } from "./EditorCalculations";
+import { fetchRandomProblem } from "../../services/problemService";
 
 /**
  * Problem management utilities for the Editor component
  */
 export class EditorProblemManager {
   /**
-   * Get a random problem from the problems array
+   * Get a random problem from the API
    */
-  getRandomProblem = (): Problem => {
-    const index = Math.floor(Math.random() * problems.length);
-    return { ...problems[index] };
+  getRandomProblem = async (): Promise<Problem> => {
+    return await fetchRandomProblem();
   };
 
   /**
