@@ -43,7 +43,7 @@
   font-weight: 600;
   margin: 0 0 1.5rem 0;
   padding-left: 1rem;
-  border-left: 4px solid;
+  border-left: 4px solid var(--category-color, #94A3B8);
   color: #eff4f4;
   text-transform: uppercase;
   letter-spacing: 2px;

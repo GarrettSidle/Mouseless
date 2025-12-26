@@ -27,14 +27,8 @@
   width: 50vw;
 }
 
-.charts-container {
-}
-
 .statistics h1 {
   margin: 0px;
-}
-
-.chart-container {
 }
 
 .chart {
@@ -47,12 +41,6 @@
   align-items: center;
   width: 80%;
   margin: auto;
-}
-
-.user-value {
-}
-
-.chart-percentile {
 }
 
 .charts-container hr {

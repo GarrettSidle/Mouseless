@@ -190,16 +190,6 @@ export class navigation extends Component<
                     <div className="dropdown-menu">
                       <button
                         className="dropdown-item"
-                        onClick={() => {
-                          this.setState({ dropdownOpen: false });
-                          // Navigate to account page (placeholder for now)
-                          window.location.href = "/Home";
-                        }}
-                      >
-                        Account
-                      </button>
-                      <button
-                        className="dropdown-item"
                         onClick={this.handleSignOut}
                       >
                         Sign Out

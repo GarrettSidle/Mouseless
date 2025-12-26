@@ -174,22 +174,7 @@ export class Login extends Component<{}, LoginFormState> {
             </h1>
           </div>
 
-          {error && (
-            <div
-              className="error-message"
-              style={{
-                color: "#ef4444",
-                backgroundColor: "rgba(239, 68, 68, 0.1)",
-                border: "1px solid rgba(239, 68, 68, 0.3)",
-                borderRadius: "8px",
-                padding: "0.75rem 1rem",
-                marginBottom: "1rem",
-                fontSize: "0.9rem",
-              }}
-            >
-              {error}
-            </div>
-          )}
+          {error && <div className="error-message">{error}</div>}
 
           <form onSubmit={this.handleSubmit} className="login-form">
             <div className="input-group">
@@ -222,15 +207,7 @@ export class Login extends Component<{}, LoginFormState> {
               />
             </div>
 
-            <button
-              type="submit"
-              className="login-button"
-              disabled={isLoading}
-              style={{
-                opacity: isLoading ? 0.6 : 1,
-                cursor: isLoading ? "not-allowed" : "pointer",
-              }}
-            >
+            <button type="submit" className="login-button" disabled={isLoading}>
               {isLoading
                 ? "Please wait..."
                 : isSignUp
