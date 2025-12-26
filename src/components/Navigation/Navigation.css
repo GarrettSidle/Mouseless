@@ -160,22 +160,19 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: rgba(74, 158, 255, 0.1);
-  border: 1px solid rgba(74, 158, 255, 0.3);
-  border-radius: 8px;
-  color: #4a9eff;
-  font-size: 0.95rem;
-  font-weight: 500;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: rgba(239, 244, 244, 0.9);
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: inherit;
 }
 
 .user-menu-button:hover {
-  background: rgba(74, 158, 255, 0.2);
-  border-color: rgba(74, 158, 255, 0.5);
-  transform: translateY(-1px);
+  color: #eff4f4;
 }
 
 .user-greeting {
@@ -185,6 +182,7 @@
 .dropdown-arrow {
   transition: transform 0.3s ease;
   color: currentColor;
+  margin-left: 0.25rem;
 }
 
 .dropdown-arrow.open {
@@ -362,8 +360,7 @@
   }
 
   .user-menu-button {
-    padding: 0.5rem 0.875rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
   .dropdown-menu {
@@ -395,23 +392,7 @@
   }
 }
 
-/* Smooth scroll behavior */
-@media (prefers-reduced-motion: no-preference) {
-  .navigation {
-    animation: slideDown 0.3s ease-out;
-  }
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
+/* Smooth scroll behavior - animation removed */
 
 /* Overlay for mobile menu */
 .nav-wrapper.enabled::after {

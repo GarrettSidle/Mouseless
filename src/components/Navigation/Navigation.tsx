@@ -160,12 +160,12 @@ export class navigation extends Component<
             <div className="nav-account">
               {this.state.username ? (
                 <div className="user-dropdown">
-                  <button
+                  <div
                     className="user-menu-button"
                     onClick={this.toggleDropdown}
                   >
                     <span className="user-greeting">
-                      Hello {this.state.username}
+                      Hello {this.state.username.toUpperCase()}
                     </span>
                     <svg
                       className={`dropdown-arrow ${
@@ -185,7 +185,7 @@ export class navigation extends Component<
                         strokeLinejoin="round"
                       />
                     </svg>
-                  </button>
+                  </div>
                   {this.state.dropdownOpen && (
                     <div className="dropdown-menu">
                       <button
