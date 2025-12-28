@@ -50,11 +50,56 @@
 }
 
 .button-container {
-  gap: 5%;
+  gap: 1rem;
   display: flex;
   width: 35%;
   margin: auto;
   margin-top: 2%;
+}
+
+.button-container button {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4d81a8 0%, #1a7dd4 100%);
+  color: #ffffff;
+  cursor: pointer;
+  border: none;
+  min-width: 120px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(32, 149, 244, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.button-container button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.button-container button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.button-container button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(32, 149, 244, 0.4);
+}
+
+.button-container button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(32, 149, 244, 0.3);
 }
 
 .legend {
@@ -63,6 +108,10 @@
   width: 50%;
   margin: auto;
   margin-top: 10px;
+}
+
+.legend.legend-centered {
+  justify-content: center;
 }
 
 .legend-you {

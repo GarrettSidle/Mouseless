@@ -13,6 +13,9 @@ interface ProblemResponse {
   best_time: number | null;
   best_key_strokes: number | null;
   best_ccpm: number | null;
+  time_histogram: number[] | null;
+  strokes_histogram: number[] | null;
+  ccpm_histogram: number[] | null;
 }
 
 /**
@@ -24,12 +27,16 @@ function mapApiResponseToProblem(apiResponse: ProblemResponse): Problem {
     modifiedText: apiResponse.modified_text,
     currentText: apiResponse.original_text, // Start with original text
     problemId: apiResponse.problem_id,
+    id: apiResponse.id, // Store the numeric ID for API submissions
     problemStats: {
-      // For now, use empty arrays. These could be populated from user stats later
-      timeStats: [],
-      CCPMStats: [],
-      keyStroksStats: [],
+      // Use histogram data from API, or empty arrays if not available
+      timeStats: apiResponse.time_histogram || [],
+      CCPMStats: apiResponse.ccpm_histogram || [],
+      keyStroksStats: apiResponse.strokes_histogram || [],
     },
+    bestTime: apiResponse.best_time || null,
+    bestKeyStrokes: apiResponse.best_key_strokes || null,
+    bestCCPM: apiResponse.best_ccpm || null,
   };
 }
 

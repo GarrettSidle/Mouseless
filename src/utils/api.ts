@@ -59,6 +59,11 @@ async function apiRequest<T>({
       );
     }
 
+    // Handle 204 No Content (no body)
+    if (response.status === 204) {
+      return null as T;
+    }
+
     return response.json() as Promise<T>;
   } catch (error) {
     console.error("Error in API request:", error);

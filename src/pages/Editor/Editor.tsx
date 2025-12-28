@@ -19,6 +19,8 @@ import { calculateSpeed, calculateCompletion } from "./EditorCalculations";
 import { EditorProblemManager } from "./EditorProblemManager";
 import { MonacoEditorManager } from "./MonacoEditorLogic";
 import { DiffEditorManager } from "./DiffEditorLogic";
+import { postRequest } from "../../utils/api";
+import { getSessionId } from "../../utils/cookies";
 
 export class Editor extends Component<{}, EditorFormState> {
   private problemManager = new EditorProblemManager();
@@ -27,6 +29,7 @@ export class Editor extends Component<{}, EditorFormState> {
   private timer: NodeJS.Timeout | null = null;
   private skipCooldownTimer: NodeJS.Timeout | null = null;
   private _isMounted: boolean = true;
+  private timerStartTime: number = 0; // Track when timer started for precise timing
 
   constructor(props: {}) {
     super(props);
@@ -83,6 +86,7 @@ export class Editor extends Component<{}, EditorFormState> {
           try {
             const newProblem = await this.problemManager.getRandomProblem();
             if (this._isMounted) {
+              this.timerStartTime = 0;
               this.setState(
                 {
                   problem: newProblem,
@@ -120,11 +124,71 @@ export class Editor extends Component<{}, EditorFormState> {
     );
   };
 
-  completeProblem = () => {
-    if (!this._isMounted) return;
+  // Helper function to calculate bin index for histogram data
+  // First bar (bin 0) covers 0 to bin_width/2, subsequent bars cover bin_width intervals
+  calculateHistogramPosition = (value: number, binWidth: number): number => {
+    // Calculate bin index using same formula as backend
+    const halfWidth = binWidth / 2.0;
+    let binIndex: number;
+
+    if (value <= halfWidth) {
+      binIndex = 0;
+    } else {
+      // For values > half_width, calculate bin index
+      binIndex = Math.round((value - halfWidth) / binWidth) + 1;
+    }
+
+    // Return -1 if bin index is >= 25 (beyond max bars)
+    if (binIndex >= 25) return -1;
+
+    // Return bin index (0-indexed)
+    return binIndex >= 0 ? binIndex : -1;
+  };
+
+  completeProblem = async () => {
+    if (!this._isMounted || !this.state.problem) return;
     this.pauseTimer();
+
+    // Calculate precise elapsed time including fractional seconds
+    const preciseElapsedSeconds =
+      this.timerStartTime > 0
+        ? (Date.now() - this.timerStartTime) / 1000
+        : this.state.elapsedSeconds;
+
+    // Capture values for API submission before state updates
+    const elapsedSeconds = preciseElapsedSeconds;
+    const strokes = this.state.strokes;
+    const ccpm = calculateSpeed(
+      this.state.problem.currentText,
+      this.state.problem.originalText,
+      elapsedSeconds
+    );
+
     // Update stats before showing completion page
     this.updateCalculations();
+
+    // Submit attempt to API (always attempt if we have a problem ID)
+    if (this.state.problem.id) {
+      try {
+        // Session ID will be automatically included in headers via getAuthHeaders() in api.ts
+        // if user is signed in
+        const response = await postRequest({
+          endpoint: "/api/attempts",
+          data: {
+            problem_id: this.state.problem.id,
+            time_seconds: elapsedSeconds,
+            key_strokes: strokes,
+            ccpm: ccpm,
+          },
+        });
+        // Response can be null if user is not logged in (204 No Content)
+        // Silently handle success - no need to show user
+      } catch (error) {
+        // Silently handle errors - don't interrupt the completion flow
+        console.error("Failed to submit attempt:", error);
+      }
+    }
+
     // Use setTimeout to ensure state updates are applied before showing stats
     setTimeout(() => {
       if (this._isMounted) {
@@ -150,6 +214,7 @@ export class Editor extends Component<{}, EditorFormState> {
         const resetProblem = this.problemManager.resetProblem(
           this.state.problem!
         );
+        this.timerStartTime = 0;
         this.setState(
           {
             problem: resetProblem,
@@ -174,6 +239,10 @@ export class Editor extends Component<{}, EditorFormState> {
   // Start the timer
   startTimer = () => {
     if (!this.state.isRunning && this._isMounted) {
+      // Record start time for precise timing
+      // Always start from current time (elapsedSeconds should be 0 when starting)
+      this.timerStartTime = Date.now();
+
       this.timer = setInterval(() => {
         // Check if component is still mounted before updating state
         if (!this._isMounted) {
@@ -184,17 +253,18 @@ export class Editor extends Component<{}, EditorFormState> {
           return;
         }
 
+        // Calculate precise elapsed time from start time
+        const preciseElapsedSeconds = (Date.now() - this.timerStartTime) / 1000;
+
         this.setState(
           (prevState) => {
-            const newSeconds = prevState.seconds + 1;
-            const newMinutes =
-              newSeconds >= 60 ? prevState.minutes + 1 : prevState.minutes;
-            const finalSeconds = newSeconds >= 60 ? 0 : newSeconds;
+            const newSeconds = Math.floor(preciseElapsedSeconds) % 60;
+            const newMinutes = Math.floor(preciseElapsedSeconds / 60);
 
             return {
-              seconds: finalSeconds,
+              seconds: newSeconds,
               minutes: newMinutes,
-              elapsedSeconds: prevState.elapsedSeconds + 1,
+              elapsedSeconds: preciseElapsedSeconds,
             };
           },
           () => {
@@ -214,7 +284,7 @@ export class Editor extends Component<{}, EditorFormState> {
             }
           }
         );
-      }, 1000);
+      }, 100); // Update every 100ms for smooth fractional second display
       this.setState({ isRunning: true });
       this.monacoEditorManager.setRunning(true);
     }
@@ -246,6 +316,7 @@ export class Editor extends Component<{}, EditorFormState> {
       clearInterval(this.timer);
       this.timer = null;
     }
+    this.timerStartTime = 0;
     this.setState({ seconds: 0, isRunning: false });
     this.monacoEditorManager.setRunning(false);
   };
@@ -261,8 +332,9 @@ export class Editor extends Component<{}, EditorFormState> {
 
   componentDidMount() {
     this._isMounted = true;
-    // Fetch initial problem from API
+    // Fetch initial problem from API (this will set isLoading: true)
     this.loadProblem();
+
     // Add keyboard event listener for hotkeys
     window.addEventListener("keydown", this.handleKeyPress);
   }
@@ -273,6 +345,7 @@ export class Editor extends Component<{}, EditorFormState> {
     try {
       const problem = await this.problemManager.getRandomProblem();
       if (this._isMounted) {
+        this.timerStartTime = 0;
         this.setState(
           {
             problem,
@@ -290,6 +363,7 @@ export class Editor extends Component<{}, EditorFormState> {
           }
         );
       }
+      this.resetProblem();
     } catch (error) {
       if (this._isMounted) {
         this.setState({
@@ -319,6 +393,8 @@ export class Editor extends Component<{}, EditorFormState> {
     this.monacoEditorManager.cleanup();
     // Remove keyboard event listener
     window.removeEventListener("keydown", this.handleKeyPress);
+    // Reset timer start time (state will be reset when component re-mounts)
+    this.timerStartTime = 0;
   }
 
   // Handle DiffEditor mount
@@ -440,11 +516,24 @@ export class Editor extends Component<{}, EditorFormState> {
         <div className={this.state.hideStats ? "hidden" : ""}>
           <Statistics
             problem={this.state.problem}
-            userPositionTime={140}
-            userPositionStrokes={5}
-            userPositionCCPM={120}
+            userPositionTime={this.calculateHistogramPosition(
+              this.state.elapsedSeconds,
+              2.5 // Time bin width
+            )}
+            userPositionStrokes={this.calculateHistogramPosition(
+              this.state.strokes,
+              5.0 // Strokes bin width
+            )}
+            userPositionCCPM={this.calculateHistogramPosition(
+              this.state.wordsPerMin,
+              100.0 // CCPM bin width
+            )}
+            currentTime={this.state.elapsedSeconds}
+            currentStrokes={this.state.strokes}
+            currentCCPM={this.state.wordsPerMin}
             resetProblem={this.resetProblem}
             skipProblem={this.skipProblem}
+            isLoggedIn={getSessionId() !== null}
           />
         </div>
         <div className="value-displays">
